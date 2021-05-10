@@ -23,7 +23,7 @@ def series_report(column_name: str, series: pd.Series) -> str:
         # else describes the data
         descriptive = series.describe()
         html += descriptive.to_frame().to_html(
-            escape=False, na_rep="", justify="left", border=0
+            classes="df_style.css", float_format='{:10.2f}'.format
         )
     return html
 
