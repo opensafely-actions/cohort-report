@@ -53,10 +53,3 @@ def make_report(path: str, output_dir: str, input_file_name: str, variable_types
         f.write(html)
         f.write("</body></html>")
         print(f"Created cohort report at {output_dir}/descriptives_{input_file_name}.html")
-
-
-def _make_bar_chart(series):
-    pass
-
-def _make_histogram(series):
-    pass
