@@ -1,5 +1,8 @@
 # Sorted list of development and production requirements
+black
 click
+flake8
+isort
 matplotlib
 pandas
 pip-tools
