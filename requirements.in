@@ -1,8 +1,7 @@
-# data processing
-pandas
-
-# graphing
+# Sorted list of development and production requirements
+click
 matplotlib
-
-# testing
+pandas
+pip-tools
+pyarrow
 pytest
