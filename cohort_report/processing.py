@@ -44,15 +44,20 @@ def load_study_cohort(path: str) -> pd.DataFrame:
     :param path: (str) path to file
     :return (pd.Dataframe): data file loaded into a Pandas Dataframe
     """
-    # load the data into a pandas DataFrame depending on ext
-    ext = PurePosixPath(path).suffix
-    if ext == ".csv":
+    suffixes = PurePosixPath(path).suffixes
+    if suffixes == [".csv"]:
         df = pd.read_csv(path)
-    elif ext == ".gz":
+    elif suffixes == [".csv", ".gz"]:
         df = pd.read_csv(path, compression="gzip")
-    elif ext == ".dta":
+    elif suffixes == [".dta"]:
         df = pd.read_stata(path, preserve_dtypes=False)
-    elif ext == ".feather":
+    elif suffixes == [".dta", ".gz"]:
+        # Current latest Pandas (v1.2.4) doesn't support reading .dta.gz files.
+        # However, development Pandas does. Rather than write (and test) a function
+        # for unzipping the file before passing it to read_stata, let's raise an error
+        # and wait for development Pandas to be released.
+        raise NotImplementedError()
+    elif suffixes == [".feather"]:
         df = pd.read_feather(path)
     else:
         raise ImportActionError("Unsupported filetype attempted to be imported")

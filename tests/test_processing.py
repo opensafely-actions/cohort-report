@@ -24,19 +24,10 @@ class TestLoadStudyCohort:
         processing.load_study_cohort(f_in)
         mock.assert_called_once_with(f_in, preserve_dtypes=False)
 
-    @pytest.mark.xfail
     @mock.patch("cohort_report.processing.pd.read_stata")
     def test_dta_gz(self, mock):
-        f_in = "input.dta.gz"
-        try:
-            # We expect this test to fail, because any .gz file will be read by
-            # pd.read_csv. However, we want it to fail because of an assertion and
-            # not because of an error. When we have updated load_study_cohort,
-            # we can remove this try/except block.
-            processing.load_study_cohort(f_in)
-        except FileNotFoundError:
-            pass
-        mock.assert_called_once_with(f_in, preserve_dtypes=False)
+        with pytest.raises(NotImplementedError):
+            processing.load_study_cohort("input.dta.gz")
 
     @mock.patch("cohort_report.processing.pd.read_feather")
     def test_feather(self, mock):
