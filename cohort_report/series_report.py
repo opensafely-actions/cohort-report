@@ -1,7 +1,8 @@
 
 import pandas as pd
 import plotly.express as px
-
+from pandas.api.types import is_categorical_dtype, is_bool_dtype, \
+    is_datetime64_dtype, is_numeric_dtype
 
 def series_report(column_name: str, series: pd.Series) -> str:
     """
@@ -41,12 +42,12 @@ def series_graph(column_name: str, series: pd.Series) -> str:
     if series.isnull().all():
         return ""
     else:
-        if series.dtype == "int64" or series.dtype == "float64":
+        if is_numeric_dtype(series.dtype):
             fig = px.histogram(data_frame=series, x=column_name,
                                title=f"Histogram showing distribution of {column_name}")
             html = fig.to_html(full_html=False)
             return html
-        elif series.dtype == "category":
+        elif is_categorical_dtype(series.dtype):
             data = series.value_counts()
             fig = px.bar(data_frame=data)
             fig.update_xaxes(categoryorder="category ascending")
