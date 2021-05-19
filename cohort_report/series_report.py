@@ -19,7 +19,7 @@ def series_report(column_name: str, series: pd.Series) -> str:
 
     # if column values are NaN, creates reports suppressed
     if series.isnull().all():
-        html += f"outputs suppressed (low number suppression)"
+        html += f"<p> outputs suppressed (low number suppression)</p>"
     else:
         # else describes the data
         descriptive = series.describe()
