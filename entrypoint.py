@@ -39,6 +39,10 @@ def main():
 
     with open(json_path) as json_file:
         instructions = json.load(json_file)
+        if "config" not in instructions:
+            raise KeyError("config not defined in instructions")
+        if "inputs" not in instructions:
+            raise KeyError("input not defined in instructions")
 
     # run cohort report
     load_cohort_report(input_files=instructions['inputs'], config=instructions['config'])
