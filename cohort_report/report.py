@@ -5,7 +5,7 @@ from pathlib import PurePosixPath
 from cohort_report.series_report import series_report, series_graph
 from cohort_report.processing import suppress_low_numbers, load_study_cohort, \
     type_variables_in_df, change_binary_to_categorical
-from cohort_report.html_blocks import HTML_STR
+from resources.html_blocks import HTML_STR
 from cohort_report.errors import ConfigAndFileMismatchError
 
 

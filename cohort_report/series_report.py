@@ -52,8 +52,7 @@ def series_graph(column_name: str, series: pd.Series) -> str:
             fig.update_xaxes(categoryorder="category ascending")
             html = fig.to_html(full_html=False)
             return html
-        elif series.dtype == "object":
-            print("object")
-            return "hello"
+        # elif series.dtype == "object":
+        #     print("object")
         else:
             return ""
