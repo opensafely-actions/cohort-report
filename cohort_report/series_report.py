@@ -1,21 +1,20 @@
 
 import pandas as pd
 import plotly.express as px
-from pandas.api.types import is_categorical_dtype, is_bool_dtype, \
-    is_datetime64_dtype, is_numeric_dtype
+from pandas.api.types import is_categorical_dtype, is_numeric_dtype
 
-def series_report(column_name: str, series: pd.Series) -> str:
+
+def series_report(series: pd.Series) -> str:
     """
     Takes in a Series - i.e. a column name and outputs a HTML block
     with a styled title, and either a note describing data is suppressed
     or a description of the data
 
-    :param column_name: (str) - name of column
     :param series: (pd.Series) - data column being reported on
     :return: HTML string
     """
     # create title
-    html = f"<h2>{column_name}</h2>"
+    html = f"<h2>{series.name}</h2>"
 
     # if column values are NaN, creates reports suppressed
     if series.isnull().all():
@@ -29,13 +28,12 @@ def series_report(column_name: str, series: pd.Series) -> str:
     return html
 
 
-def series_graph(column_name: str, series: pd.Series) -> str:
+def series_graph(series: pd.Series) -> str:
     """
     Takes in a series (i.e. a column) and if contains data
     returns a histogram for numerical data, and a barchart for
     categorical data
 
-    :param column_name: (str) name of column
     :param series: (pd.Series) data being graphed
     :return:
     """
@@ -43,8 +41,8 @@ def series_graph(column_name: str, series: pd.Series) -> str:
         return ""
     else:
         if is_numeric_dtype(series.dtype):
-            fig = px.histogram(data_frame=series, x=column_name,
-                               title=f"Histogram showing distribution of {column_name}")
+            fig = px.histogram(data_frame=series, x=series.name,
+                               title=f"Histogram showing distribution of {series.name}")
             html = fig.to_html(full_html=False)
             return html
         elif is_categorical_dtype(series.dtype):

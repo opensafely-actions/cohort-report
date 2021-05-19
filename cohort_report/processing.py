@@ -32,7 +32,9 @@ def suppress_low_numbers(series, dtype, limit=6) -> pd.Series:
             return series
 
     # returns empty series if does not satisfy limit criteria
-    return pd.Series()
+    empty_series = pd.Series()
+    empty_series.name = series.name
+    return empty_series
 
 
 def load_study_cohort(path: str) -> pd.DataFrame:

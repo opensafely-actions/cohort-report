@@ -44,8 +44,8 @@ def make_report(path: str, output_dir: str, input_file_name: str, variable_types
             continue
         series = suppress_low_numbers(df[name], dtype)
         transformed_series = change_binary_to_categorical(series=series)
-        html += series_report(column_name=name, series=transformed_series)
-        html += series_graph(column_name=name, series=transformed_series)
+        html += series_report(series=transformed_series)
+        html += series_graph(series=transformed_series)
 
 
     with open(f"{output_dir}/descriptives_{input_file_name}.html", "w") as f:
