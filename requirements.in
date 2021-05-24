@@ -6,5 +6,6 @@ isort
 matplotlib
 pandas
 pip-tools
+plotly
 pyarrow
 pytest
