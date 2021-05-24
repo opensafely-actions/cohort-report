@@ -1,33 +1,39 @@
-
-import pandas as pd
-import numpy as np
-from pandas.api.types import is_categorical_dtype, is_bool_dtype, \
-    is_datetime64_dtype, is_numeric_dtype
-from pathlib import PurePosixPath
+from pathlib import Path
 from typing import Dict
 
-from .errors import ImportActionError, ColumnsDoNotMatch
+import pandas as pd
+from pandas.api.types import (
+    is_bool_dtype,
+    is_categorical_dtype,
+    is_datetime64_dtype,
+    is_numeric_dtype,
+)
+
+from .errors import ColumnsDoNotMatch, ImportActionError
 
 
-def suppress_low_numbers(series, dtype, limit=6) -> pd.Series:
+def suppress_low_numbers(series, limit=6) -> pd.Series:
     """
     This takes in a series and based on type of series, it suppresses
     contents, and replaces with NaN if any count of any value is less
     than the limit (default 5 or less).
 
-    :param series (pd.Series): A dataframe column
-    :param dtype (numpy.dtype): Type of the data within this column
-    :param limit (int): limit at which any counts below this should
-        be suppressed
-    :return: pd.Series
+    Args:
+        series (pd.Series): A dataframe column
+        limit (int): limit at which any counts below this should
+            be suppressed. Default value is 6.
+
+    Returns:
+         pd.Series: A series which is either the same as original or
+            empty if small number suppressed
     """
-    if is_categorical_dtype(dtype) or is_bool_dtype(dtype):
-        if ~np.any(series.value_counts() < limit):
+    if is_categorical_dtype(series.dtype) or is_bool_dtype(series.dtype):
+        if ~(series.value_counts() < limit).any():
             return series
-    elif is_datetime64_dtype(dtype) or is_numeric_dtype(dtype):
+    elif is_datetime64_dtype(series.dtype) or is_numeric_dtype(series.dtype):
         if (
-                ~np.any(pd.isnull(series).value_counts() < limit)
-                and series[~pd.isnull(series)].count() >= limit
+            ~(series.value_counts() < limit).any()
+            and series[~pd.isnull(series)].count() >= limit
         ):
             return series
 
@@ -46,7 +52,7 @@ def load_study_cohort(path: str) -> pd.DataFrame:
     :param path: (str) path to file
     :return (pd.Dataframe): data file loaded into a Pandas Dataframe
     """
-    suffixes = PurePosixPath(path).suffixes
+    suffixes = Path(path).suffixes
     if suffixes == [".csv"]:
         df = pd.read_csv(path)
     elif suffixes == [".csv", ".gz"]:
@@ -65,6 +71,7 @@ def load_study_cohort(path: str) -> pd.DataFrame:
         raise ImportActionError("Unsupported filetype attempted to be imported")
     return df
 
+
 def type_variables_in_df(df: pd.DataFrame, variables: Dict) -> pd.DataFrame:
     """
     Takes in a datafrmae which has been loaded from either a csv or a csv.gz and
@@ -76,26 +83,30 @@ def type_variables_in_df(df: pd.DataFrame, variables: Dict) -> pd.DataFrame:
     :return: Dataframe
     """
     if len(df.columns) != (len(variables.keys()) + 1):
-        raise ColumnsDoNotMatch("The number of columns in your dataframe does not "
-                                "match the number of variables in your config 'variable_type'")
+        raise ColumnsDoNotMatch(
+            "The number of columns in your dataframe does not "
+            "match the number of variables in your config 'variable_type'"
+        )
 
     for column in df.columns:
         if column == "patient_id":
             continue
         elif column not in variables.keys():
-            raise ColumnsDoNotMatch("Your dataframe contains columns not defined in the variable_type "
-                                    "in your config in project.yaml")
+            missing_columns = set(df.columns.drop("patient_id")) - set(variables)
+            if missing_columns:
+                missing_columns_str = ", ".join(list(missing_columns))
+                raise ColumnsDoNotMatch(f"Your data frame is missing columns: {missing_columns_str}")
 
-    for column_name, category in variables.items():
-        if category == "int":
+    for column_name, column_type in variables.items():
+        if column_type == "int":
             variables[column_name] = "int64"
-        elif category == "float":
+        elif column_type == "float":
             variables[column_name] = "float64"
-        elif category == "categorical":
+        elif column_type == "categorical":
             variables[column_name] = "category"
-        elif category == "date":
+        elif column_type == "date":
             variables[column_name] = "category"
-        elif category == "binary":
+        elif column_type == "binary":
             variables[column_name] = "int64"
 
     df = df.astype(variables)
@@ -112,6 +123,6 @@ def change_binary_to_categorical(series: pd.Series) -> pd.Series:
     # if the data is only ints of 0 or 1, it is a binary data type. this is
     # changed into category
     if series.isin([0, 1]).all():
-        series = series.astype('category')
+        series = series.astype("category")
 
     return series

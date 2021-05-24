@@ -1,4 +1,3 @@
-
 import pandas as pd
 import plotly.express as px
 from pandas.api.types import is_categorical_dtype, is_numeric_dtype
@@ -18,12 +17,12 @@ def series_report(series: pd.Series) -> str:
 
     # if column values are NaN, creates reports suppressed
     if series.isnull().all():
-        html += f"<p> outputs suppressed (low number suppression)</p>"
+        html += "<p> outputs suppressed (low number suppression)</p>"
     else:
         # else describes the data
         descriptive = series.describe()
         html += descriptive.to_frame().to_html(
-            classes="df_style.css", float_format='{:10.2f}'.format
+            classes="df_style.css", float_format="{:10.2f}".format
         )
     return html
 
@@ -41,8 +40,11 @@ def series_graph(series: pd.Series) -> str:
         return ""
     else:
         if is_numeric_dtype(series.dtype):
-            fig = px.histogram(data_frame=series, x=series.name,
-                               title=f"Histogram showing distribution of {series.name}")
+            fig = px.histogram(
+                data_frame=series,
+                x=series.name,
+                title=f"Histogram showing distribution of {series.name}",
+            )
             html = fig.to_html(full_html=False)
             return html
         elif is_categorical_dtype(series.dtype):
