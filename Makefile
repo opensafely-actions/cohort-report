@@ -4,13 +4,8 @@ define USAGE
 Run commands for a project
 
 Commands:
-	coverage  Reports unit test coverage across python files
 	format    Runs black and isort over all python files
-	lint      Lint all python files using flake8 and lints `src/Dockerfile` using hadolint
-	setup     Install Python dependencies with virtualenv
-	test      Run linters, test db migrations and tests
-	typehint  Run mypy over project and check for typehints
-	update    Updates the requirements.txt using piptools from the requirements.in file
+	lint      Lint all python files using flake8
 
 endef
 
