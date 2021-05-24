@@ -11,10 +11,12 @@ def load_cohort_report(input_files, config) -> None:
     processed_config = load_config(config)
 
     for input_name, path in input_files.items():
-        make_report(path=path,
-                    output_dir=processed_config["output_path"],
-                    input_file_name=input_name,
-                    variable_types=processed_config["variable_types"])
+        make_report(
+            path=path,
+            output_dir=processed_config["output_path"],
+            input_file_name=input_name,
+            variable_types=processed_config["variable_types"],
+        )
 
 
 def main():
@@ -22,10 +24,12 @@ def main():
     Command line tool for running cohort report.
     """
     # make args parser
-    parser = argparse.ArgumentParser(description="Outputs variable report and graphs from cohort")
+    parser = argparse.ArgumentParser(
+        description="Outputs variable report and graphs from cohort"
+    )
 
     # version
-    parser.add_argument("--version", action='version', version="cohortreport 0.0.1")
+    parser.add_argument("--version", action="version", version="cohortreport 0.0.1")
 
     # configurations
     parser.add_argument("config", type=str, help="XXX add something here")
@@ -45,13 +49,9 @@ def main():
             raise KeyError("input not defined in instructions")
 
     # run cohort report
-    load_cohort_report(input_files=instructions['inputs'], config=instructions['config'])
-
-
-
-
-
-
+    load_cohort_report(
+        input_files=instructions["inputs"], config=instructions["config"]
+    )
 
 
 if __name__ == "__main__":

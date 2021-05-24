@@ -1,12 +1,6 @@
-
 from typing import Dict
 
-
-DEFAULTS = {
-    "output_path": "outputs/",
-    "input_path": "inputs/",
-    "variable_types": None
-}
+DEFAULTS = {"output_path": "outputs/", "input_path": "inputs/", "variable_types": None}
 
 
 def load_config(config) -> Dict:

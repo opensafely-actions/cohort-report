@@ -1,4 +1,3 @@
-
 HTML_STR = """<html>
 <head>
   <style>
