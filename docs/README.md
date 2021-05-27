@@ -14,8 +14,29 @@ meaning no report will be provided for variables
 with any count 5 or less. 
 
 ### Using Cohort Report Action 
+The following example blocks should be included 
+in the `project.yaml` file. File formats that retain
+typing, such as a `.feather` file, only need to be 
+a input file, and do not need a `--config`. 
 
-```yaml
+Example `project.yaml`
+```yaml 
+inputs: 
+  input: tests/test_data/input.feather
+```
+
+Other untyped file formats such as `.csv` need to be
+passed a list of variables and their types. The typing
+options available are:
+
+- categorical
+- numerical 
+- binary
+- date
+
+Example
+`project.yaml`
+```yaml 
 inputs: 
   input: tests/test_data/input.csv
 config:
