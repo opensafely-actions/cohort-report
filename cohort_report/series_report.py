@@ -9,9 +9,17 @@ def series_report(series: pd.Series) -> str:
     with a styled title, and either a note describing data is suppressed
     or a description of the data
 
-    :param series: (pd.Series) - data column being reported on
-    :return: HTML string
+    Args:
+        series (pd.Series): data column being reported on
+    Returns:
+        str: HTML string
     """
+    if not isinstance(series, pd.Series):
+        raise TypeError(
+            f"A {type(series)} has been passed to the series_report() function."
+            f"This function accepts pandas Series only."
+        )
+
     # create title
     html = f"<h2>{series.name}</h2>"
 
@@ -33,9 +41,17 @@ def series_graph(series: pd.Series) -> str:
     returns a histogram for numerical data, and a barchart for
     categorical data
 
-    :param series: (pd.Series) data being graphed
-    :return:
+     Args:
+        series (pd.Series): data column that is being graphed
+    Returns:
+        str: HTML string
     """
+    if not isinstance(series, pd.Series):
+        raise TypeError(
+            f"A {type(series)} has been passed to the series_graph() function."
+            f"This function accepts pandas Series only."
+        )
+
     if series.isnull().all():
         return ""
     else:
@@ -53,7 +69,5 @@ def series_graph(series: pd.Series) -> str:
             fig.update_xaxes(categoryorder="category ascending")
             html = fig.to_html(full_html=False)
             return html
-        # elif series.dtype == "object":
-        #     print("object")
         else:
             return ""

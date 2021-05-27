@@ -31,6 +31,24 @@ def make_report(
     Returns:
         None
     """
+    if not isinstance(path, str):
+        raise TypeError(
+            f" The path to the study population was a {type(path)}. "
+            f"The path should be a str."
+        )
+
+    if not isinstance(output_dir, str):
+        raise TypeError(
+            f" The output directory was a {type(output_dir)}. "
+            f"The path should be a str."
+        )
+
+    if not isinstance(input_file_name, str):
+        raise TypeError(
+            f" The input file name was a {type(input_file_name)}. "
+            f"The input file name (input_file_name) should be a str."
+        )
+
     # validate that config passed matches with file type
     ext = PurePosixPath(path).suffix
     if ext == ".csv" or ext == ".csv.gz":

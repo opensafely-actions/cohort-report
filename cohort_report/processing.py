@@ -28,8 +28,10 @@ def suppress_low_numbers(series: pd.Series, limit: int = 6) -> pd.Series:
             empty if small number suppressed
     """
     if not isinstance(series, pd.Series):
-        raise TypeError(f"A {type(series)} has been passed to the suppress_low_numbers() function."
-                        f"This function accepts pandas Series only.")
+        raise TypeError(
+            f"A {type(series)} has been passed to the suppress_low_numbers() function."
+            f"This function accepts pandas Series only."
+        )
 
     if is_categorical_dtype(series.dtype) or is_bool_dtype(series.dtype):
         if ~(series.value_counts() < limit).any():
@@ -61,8 +63,10 @@ def load_study_cohort(path: str) -> pd.DataFrame:
         pd.Dataframe: The data loaded into a pandas Dataframe
     """
     if not isinstance(path, str):
-        raise TypeError(f" The {type(path)} was passed to the load_study_cohort() function. "
-                        f"This function accepts str only.")
+        raise TypeError(
+            f" The {type(path)} was passed to the load_study_cohort() function. "
+            f"This function accepts str only."
+        )
 
     # grabs ext off end of file
     suffixes = Path(path).suffixes
@@ -78,7 +82,9 @@ def load_study_cohort(path: str) -> pd.DataFrame:
         # However, development Pandas does. Rather than write (and test) a function
         # for unzipping the file before passing it to read_stata, let's raise an error
         # and wait for development Pandas to be released.
-        raise NotImplementedError("Current latest Pandas (v1.2.4) doesn't support reading .dta.gz files.")
+        raise NotImplementedError(
+            "Current latest Pandas (v1.2.4) doesn't support reading .dta.gz files."
+        )
     elif suffixes == [".feather"]:
         df = pd.read_feather(path)
     else:
@@ -92,10 +98,20 @@ def type_variables_in_df(df: pd.DataFrame, variables: Dict) -> pd.DataFrame:
     therefore does not have type information. It takes in a variable dict which
     comes from the project.yaml and is passed in as a config json object.
     It then assigns various types to the df columns.
-    :param df: (Dataframe) data to be changed and typed
-    :param variables: config that maps variable name (i.e. column name) to type
-    :return: Dataframe
+
+    Args:
+        df (Dataframe): data to be changed and typed
+        variables (Dict): config that maps variable name (i.e. column name) to type
+
+    Returns:
+        pd.Dataframe: Dataframes with types applied
     """
+    if not isinstance(df, pd.DataFrame):
+        raise TypeError(
+            f"A {type(df)} has been passed to the type_variables_in_df() function."
+            f"This function accepts pandas Dataframe type only."
+        )
+
     if len(df.columns) != (len(variables.keys()) + 1):
         raise ColumnsDoNotMatch(
             "The number of columns in your dataframe does not "
@@ -109,7 +125,9 @@ def type_variables_in_df(df: pd.DataFrame, variables: Dict) -> pd.DataFrame:
             missing_columns = set(df.columns.drop("patient_id")) - set(variables)
             if missing_columns:
                 missing_columns_str = ", ".join(list(missing_columns))
-                raise ColumnsDoNotMatch(f"Your data frame is missing columns: {missing_columns_str}")
+                raise ColumnsDoNotMatch(
+                    f"Your data frame is missing columns: {missing_columns_str}"
+                )
 
     for column_name, column_type in variables.items():
         if column_type == "int":
@@ -131,12 +149,17 @@ def change_binary_to_categorical(series: pd.Series) -> pd.Series:
     """
     If the series only contains 0s or 1s, it changes the series to a
     categorical type.
-    :param series: Data series being transformed
-    :return: series
+
+    Args:
+        series (pd.Series): Data series being transformed
+    Returns:
+        pd.Series: Series with binary values changed to categorical type.
     """
     if not isinstance(series, pd.Series):
-        raise TypeError(f"A {type(series)} has been passed to the suppress_low_numbers() function."
-                        f"This function accepts pandas Series only.")
+        raise TypeError(
+            f"A {type(series)} has been passed to the change_binary_to_categorical() "
+            f"function. This function accepts pandas Series only."
+        )
     # if the data is only ints of 0 or 1, it is a binary data type. this is
     # changed into category
     if series.isin([0, 1]).all():
