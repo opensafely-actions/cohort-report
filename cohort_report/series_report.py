@@ -2,9 +2,10 @@ import pandas as pd
 import plotly.express as px
 from pandas.api.types import is_categorical_dtype, is_numeric_dtype
 from markupsafe import Markup
+from typing import Union
 
 
-def series_report(series: pd.Series) -> str:
+def series_report(series: pd.Series) -> Union[pd.Series, str]:
     """
     Takes in a Series - i.e. a column name and outputs a HTML block
     with a styled title, and either a note describing data is suppressed
@@ -13,7 +14,7 @@ def series_report(series: pd.Series) -> str:
     Args:
         series (pd.Series): data column being reported on
     Returns:
-        str: HTML string
+        string or pd.Series
     """
     if not isinstance(series, pd.Series):
         raise TypeError(
@@ -31,7 +32,7 @@ def series_report(series: pd.Series) -> str:
         return descriptive
 
 
-def series_graph(series: pd.Series) -> str:
+def series_graph(series: pd.Series) -> Union[str, Markup]:
     """
     Takes in a series (i.e. a column) and if contains data
     returns a histogram for numerical data, and a barchart for
@@ -40,7 +41,7 @@ def series_graph(series: pd.Series) -> str:
      Args:
         series (pd.Series): data column that is being graphed
     Returns:
-        str: HTML string
+        str or Markup: HTML marked safe image or a string
     """
     if not isinstance(series, pd.Series):
         raise TypeError(
