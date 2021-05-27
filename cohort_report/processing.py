@@ -12,7 +12,7 @@ from pandas.api.types import (
 from .errors import ColumnsDoNotMatch, ImportActionError
 
 
-def suppress_low_numbers(series, limit=6) -> pd.Series:
+def suppress_low_numbers(series: pd.Series, limit: int = 6) -> pd.Series:
     """
     This takes in a series and based on type of series, it suppresses
     contents, and replaces with NaN if any count of any value is less
@@ -27,6 +27,10 @@ def suppress_low_numbers(series, limit=6) -> pd.Series:
          pd.Series: A series which is either the same as original or
             empty if small number suppressed
     """
+    if not isinstance(series, pd.Series):
+        raise TypeError(f"A {type(series)} has been passed to the suppress_low_numbers() function."
+                        f"This function accepts pandas Series only.")
+
     if is_categorical_dtype(series.dtype) or is_bool_dtype(series.dtype):
         if ~(series.value_counts() < limit).any():
             return series
@@ -40,6 +44,7 @@ def suppress_low_numbers(series, limit=6) -> pd.Series:
     # returns empty series if does not satisfy limit criteria
     empty_series = pd.Series()
     empty_series.name = series.name
+
     return empty_series
 
 
@@ -49,10 +54,19 @@ def load_study_cohort(path: str) -> pd.DataFrame:
     and returns a dataframe. This function allows different
     file types to be loaded (csv, csv.gz, dta, feather).
 
-    :param path: (str) path to file
-    :return (pd.Dataframe): data file loaded into a Pandas Dataframe
+    Args:
+        path (str): path to file
+
+    Returns:
+        pd.Dataframe: The data loaded into a pandas Dataframe
     """
+    if not isinstance(path, str):
+        raise TypeError(f" The {type(path)} was passed to the load_study_cohort() function. "
+                        f"This function accepts str only.")
+
+    # grabs ext off end of file
     suffixes = Path(path).suffixes
+
     if suffixes == [".csv"]:
         df = pd.read_csv(path)
     elif suffixes == [".csv", ".gz"]:
@@ -64,7 +78,7 @@ def load_study_cohort(path: str) -> pd.DataFrame:
         # However, development Pandas does. Rather than write (and test) a function
         # for unzipping the file before passing it to read_stata, let's raise an error
         # and wait for development Pandas to be released.
-        raise NotImplementedError()
+        raise NotImplementedError("Current latest Pandas (v1.2.4) doesn't support reading .dta.gz files.")
     elif suffixes == [".feather"]:
         df = pd.read_feather(path)
     else:
@@ -120,6 +134,9 @@ def change_binary_to_categorical(series: pd.Series) -> pd.Series:
     :param series: Data series being transformed
     :return: series
     """
+    if not isinstance(series, pd.Series):
+        raise TypeError(f"A {type(series)} has been passed to the suppress_low_numbers() function."
+                        f"This function accepts pandas Series only.")
     # if the data is only ints of 0 or 1, it is a binary data type. this is
     # changed into category
     if series.isin([0, 1]).all():
