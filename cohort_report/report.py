@@ -1,5 +1,6 @@
 from pathlib import PurePosixPath
 from typing import Dict, Union
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from cohort_report.errors import ConfigAndFileMismatchError
 from cohort_report.processing import (
@@ -9,7 +10,6 @@ from cohort_report.processing import (
     type_variables_in_df,
 )
 from cohort_report.series_report import series_graph, series_report
-from resources.html_blocks import HTML_STR
 
 
 def make_report(
@@ -65,23 +65,29 @@ def make_report(
     if variable_types is not None:
         df = type_variables_in_df(df=df, variables=variable_types)
 
-    # empty html to start with
-    html = "<h1> Cohort Report </h1>"
+    env = Environment(
+        loader=FileSystemLoader("resources/"),
+        autoescape=select_autoescape()
+    )
+    template = env.get_template("report_template.html")
+
 
     # loops through the dataframe column by column and suppreses low
     # numbers, make a cohort report and then a graph
+    reports = {}
     for name, series in df.iteritems():
         if name == "patient_id":
             continue
         series = suppress_low_numbers(series)
         transformed_series = change_binary_to_categorical(series=series)
-        html += series_report(series=transformed_series)
-        html += series_graph(series=transformed_series)
+        report_dict = {"written_report": series_report(series=transformed_series),
+                       "graph": series_graph(series=transformed_series)}
+        reports[name] = report_dict
+
+    html = template.render(reports=reports)
 
     with open(f"{output_dir}/descriptives_{input_file_name}.html", "w") as f:
-        f.write(HTML_STR)
         f.write(html)
-        f.write("</body></html>")
         print(
             f"Created cohort report at {output_dir}/descriptives_{input_file_name}.html"
         )

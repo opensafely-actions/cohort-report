@@ -1,6 +1,7 @@
 import pandas as pd
 import plotly.express as px
 from pandas.api.types import is_categorical_dtype, is_numeric_dtype
+from markupsafe import Markup
 
 
 def series_report(series: pd.Series) -> str:
@@ -20,19 +21,14 @@ def series_report(series: pd.Series) -> str:
             f"This function accepts pandas Series only."
         )
 
-    # create title
-    html = f"<h2>{series.name}</h2>"
-
+    html = ""
     # if column values are NaN, creates reports suppressed
     if series.isnull().all():
-        html += "<p> outputs suppressed (low number suppression)</p>"
+        return "Suppressed due to low numbers"
     else:
         # else describes the data
         descriptive = series.describe()
-        html += descriptive.to_frame().to_html(
-            classes="df_style.css", float_format="{:10.2f}".format
-        )
-    return html
+        return descriptive
 
 
 def series_graph(series: pd.Series) -> str:
@@ -61,13 +57,13 @@ def series_graph(series: pd.Series) -> str:
                 x=series.name,
                 title=f"Histogram showing distribution of {series.name}",
             )
-            html = fig.to_html(full_html=False)
-            return html
+            image = Markup(fig.to_html(full_html=False, default_width="50%"))
+            return image
         elif is_categorical_dtype(series.dtype):
             data = series.value_counts()
             fig = px.bar(data_frame=data)
             fig.update_xaxes(categoryorder="category ascending")
-            html = fig.to_html(full_html=False)
-            return html
+            image = Markup(fig.to_html(full_html=False, default_width="50%"))
+            return image
         else:
             return ""
