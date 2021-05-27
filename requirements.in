@@ -9,3 +9,4 @@ pip-tools
 plotly
 pyarrow
 pytest
+jinja2
