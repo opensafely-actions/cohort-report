@@ -1,4 +1,4 @@
-from pathlib import PurePosixPath
+from pathlib import Path
 from typing import Dict, Union
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
@@ -13,7 +13,7 @@ from cohort_report.series_report import series_graph, series_report
 
 
 def make_report(
-    path: str, output_dir: str, input_file_name: str, variable_types: Union[Dict, None]
+    path: Path, output_dir: str, input_file_name: str, variable_types: Union[Dict, None]
 ) -> None:
     """
     Loads the data and create a graph per column.
@@ -31,10 +31,10 @@ def make_report(
     Returns:
         None
     """
-    if not isinstance(path, str):
+    if not isinstance(path, Path):
         raise TypeError(
             f" The path to the study population was a {type(path)}. "
-            f"The path should be a str."
+            f"The path should be a Path."
         )
 
     if not isinstance(output_dir, str):
@@ -50,7 +50,7 @@ def make_report(
         )
 
     # validate that config passed matches with file type
-    ext = PurePosixPath(path).suffix
+    ext = path.suffix
     if ext == ".csv" or ext == ".csv.gz":
         if variable_types is None:
             raise ConfigAndFileMismatchError(

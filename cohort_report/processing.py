@@ -50,26 +50,22 @@ def suppress_low_numbers(series: pd.Series, limit: int = 6) -> pd.Series:
     return empty_series
 
 
-def load_study_cohort(path: str) -> pd.DataFrame:
+def load_study_cohort(path: Path) -> pd.DataFrame:
     """
     Loads the study cohort (from study_definition.py being run),
     and returns a dataframe. This function allows different
     file types to be loaded (csv, csv.gz, dta, feather).
 
     Args:
-        path (str): path to file
+        path: path to file
 
     Returns:
         pd.Dataframe: The data loaded into a pandas Dataframe
     """
-    if not isinstance(path, str):
-        raise TypeError(
-            f" The {type(path)} was passed to the load_study_cohort() function. "
-            f"This function accepts str only."
-        )
+
 
     # grabs ext off end of file
-    suffixes = Path(path).suffixes
+    suffixes = path.suffixes
 
     if suffixes == [".csv"]:
         df = pd.read_csv(path)
@@ -82,9 +78,7 @@ def load_study_cohort(path: str) -> pd.DataFrame:
         # However, development Pandas does. Rather than write (and test) a function
         # for unzipping the file before passing it to read_stata, let's raise an error
         # and wait for development Pandas to be released.
-        raise NotImplementedError(
-            "Current latest Pandas (v1.2.4) doesn't support reading .dta.gz files."
-        )
+        raise NotImplementedError()
     elif suffixes == [".feather"]:
         df = pd.read_feather(path)
     else:
