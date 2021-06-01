@@ -1,6 +1,7 @@
 """ Command line tool for using cohort reporter """
 import argparse
 import json
+from pathlib import Path
 
 from cohort_report.report import make_report
 from utils_entrypoint import load_config
@@ -12,7 +13,7 @@ def load_cohort_report(input_files, config) -> None:
 
     for input_name, path in input_files.items():
         make_report(
-            path=path,
+            path=Path(path),
             output_dir=processed_config["output_path"],
             input_file_name=input_name,
             variable_types=processed_config["variable_types"],
