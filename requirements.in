@@ -10,3 +10,4 @@ plotly
 pyarrow
 pytest
 jinja2
+mypy
