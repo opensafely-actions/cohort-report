@@ -63,7 +63,6 @@ def load_study_cohort(path: Path) -> pd.DataFrame:
         pd.Dataframe: The data loaded into a pandas Dataframe
     """
 
-
     # grabs ext off end of file
     suffixes = path.suffixes
 

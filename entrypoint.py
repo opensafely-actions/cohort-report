@@ -1,17 +1,15 @@
 """ Command line tool for using cohort reporter """
-from cohort_report.report import make_report
-from utils_entrypoint import load_config
-
 import argparse
 import json
-from pathlib import Path
 import os
+from pathlib import Path
 
+from cohort_report.report import make_report
+from utils_entrypoint import load_config
 from version import __version__
 
+
 class ActionConfig:
-
-
     def __init__(self, validator=None):
         self.validator = validator
 
@@ -35,7 +33,9 @@ class ActionConfig:
         return config
 
     @classmethod
-    def add_to_parser(cls, parser, help="The configuration for the cohort report", validator=None):
+    def add_to_parser(
+        cls, parser, help="The configuration for the cohort report", validator=None
+    ):
         parser.add_argument(
             "--config",
             required=True,
@@ -52,11 +52,11 @@ def load_cohort_report(input_files: list, config: dict) -> None:
         input_filename_with_ext = os.path.basename(input_file)
         input_filename = os.path.splitext(input_filename_with_ext)[0]
         make_report(
-                path=Path(input_file),
-                output_dir=processed_config["output_path"],
-                input_file_name=input_filename,
-                variable_types=processed_config["variable_types"],
-            )
+            path=Path(input_file),
+            output_dir=processed_config["output_path"],
+            input_file_name=input_filename,
+            variable_types=processed_config["variable_types"],
+        )
 
 
 def main():
@@ -72,18 +72,20 @@ def main():
     ActionConfig.add_to_parser(parser)
 
     # version
-    parser.add_argument("--version", action="version", version=f"cohortreport {__version__}")
+    parser.add_argument(
+        "--version", action="version", version=f"cohortreport {__version__}"
+    )
 
     # input files
-    parser.add_argument("input_files", nargs="*", help="Files that cohort report will be run on")
+    parser.add_argument(
+        "input_files", nargs="*", help="Files that cohort report will be run on"
+    )
 
     # parse args
     args = parser.parse_args()
 
     # run cohort report
-    load_cohort_report(
-        input_files=args.input_files, config=args.config
-    )
+    load_cohort_report(input_files=args.input_files, config=args.config)
 
 
 if __name__ == "__main__":

@@ -2,7 +2,6 @@ from setuptools import find_namespace_packages, setup
 
 from version import __version__
 
-
 setup(
     name="cohort-report-action",
     version=__version__,
@@ -11,13 +10,13 @@ setup(
     url="https://github.com/opensafely-core/cohort-report-action",
     description="Command line tool for graphing study cohorts",
     long_description="Command line tool for creating graphs and tables describing "
-                     "a study cohort variables (univariates only).",
+    "a study cohort variables (univariates only).",
     license="GPLv3",
     author="OpenSAFELY",
     author_email="tech@opensafely.org",
     python_requires=">=3.7",
     install_requires=["pandas", "plotly", "pyarrow", "jinja2"],
-    data_files=[("/templates", ['resources/report_template.html'])],
+    data_files=[("/templates", ["resources/report_template.html"])],
     entry_points={"console_scripts": ["cohortreport=entrypoint:main"]},
     classifiers=["License :: OSI Approved :: GNU General Public License v3 (GPLv3)"],
 )

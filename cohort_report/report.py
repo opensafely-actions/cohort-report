@@ -1,8 +1,9 @@
+import os
 from pathlib import Path
 from typing import Dict, Union
-import os
-from jinja2 import Environment, select_autoescape, FileSystemLoader
+
 import pkg_resources
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from cohort_report.errors import ConfigAndFileMismatchError
 from cohort_report.processing import (
@@ -67,13 +68,19 @@ def make_report(
     if variable_types is not None:
         df = type_variables_in_df(df=df, variables=variable_types)
 
-    template_location = os.path.dirname((os.path.dirname(pkg_resources.resource_filename(__name__, "report_template.html")))) + "/resources/"
+    template_location = (
+        os.path.dirname(
+            (
+                os.path.dirname(
+                    pkg_resources.resource_filename(__name__, "report_template.html")
+                )
+            )
+        )
+        + "/resources/"
+    )
     template_loader = FileSystemLoader(searchpath=template_location)
 
-    template_env = Environment(
-        loader=template_loader,
-        autoescape=select_autoescape()
-    )
+    template_env = Environment(loader=template_loader, autoescape=select_autoescape())
 
     template = template_env.get_or_select_template("report_template.html")
 
@@ -85,14 +92,18 @@ def make_report(
             continue
         series = suppress_low_numbers(series)
         transformed_series = change_binary_to_categorical(series=series)
-        report_dict = {"written_report": series_report(series=transformed_series),
-                       "graph": series_graph(series=transformed_series)}
+        report_dict = {
+            "written_report": series_report(series=transformed_series),
+            "graph": series_graph(series=transformed_series),
+        }
         reports[name] = report_dict
 
     html = template.render(reports=reports)
 
+    os.makedirs(output_dir, exist_ok=True)
+
     with open(f"{output_dir}/descriptives_{input_file_name}.html", "w") as f:
         f.write(html)
         print(
-            f"Created cohort report at {output_dir}/descriptives_{input_file_name}.html"
+            f"Created cohort report at {output_dir}descriptives_{input_file_name}.html"
         )

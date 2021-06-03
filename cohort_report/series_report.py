@@ -1,8 +1,9 @@
+from typing import Union
+
 import pandas as pd
 import plotly.express as px
-from pandas.api.types import is_categorical_dtype, is_numeric_dtype
 from markupsafe import Markup
-from typing import Union
+from pandas.api.types import is_categorical_dtype, is_numeric_dtype
 
 
 def series_report(series: pd.Series) -> Union[pd.Series, str]:
@@ -21,8 +22,6 @@ def series_report(series: pd.Series) -> Union[pd.Series, str]:
             f"A {type(series)} has been passed to the series_report() function."
             f"This function accepts pandas Series only."
         )
-
-    html = ""
     # if column values are NaN, creates reports suppressed
     if series.isnull().all():
         return "Suppressed due to low numbers"
