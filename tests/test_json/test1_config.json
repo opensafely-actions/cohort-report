@@ -11,5 +11,6 @@
     "stp": "categorical",
     "rural_urban": "categorical",
     "prior_covid_date": "date"
-  }
+  },
+  "output_path": "tests/test_outputs/"
 }
