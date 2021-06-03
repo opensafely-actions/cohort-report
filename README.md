@@ -40,6 +40,28 @@ cohortreport data/input.csv --config test_actions_jsons/test1_config.json
 cohortreport data/input.csv data/second_input.csv --config test_actions_jsons/test1_config.json
 ```
 
+### Project yaml
+This action can be invoked from the `project.yaml`. This is passed into json. 
+
+```yaml
+actions: 
+  cohort_report:
+    run: cohortreport:latest input.csv
+config:
+    variable_types:
+      age: int
+      sex: categorical
+      ethnicity: categorical
+      bmi: float
+      diabetes: binary
+      chronic_liver_disease: binary
+      imd: categorical
+      region: categorical
+      stp: categorical
+      rural_urban: categorical
+      prior_covid_date: date
+    output_path: outputs
+```
 
 ## Local Development
 
