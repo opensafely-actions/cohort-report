@@ -1,6 +1,8 @@
 from pathlib import Path
 from typing import Dict, Union
-from jinja2 import Environment, FileSystemLoader, select_autoescape
+import os
+from jinja2 import Environment, select_autoescape, FileSystemLoader
+import pkg_resources
 
 from cohort_report.errors import ConfigAndFileMismatchError
 from cohort_report.processing import (
@@ -65,12 +67,15 @@ def make_report(
     if variable_types is not None:
         df = type_variables_in_df(df=df, variables=variable_types)
 
-    env = Environment(
-        loader=FileSystemLoader("resources/"),
+    template_location = os.path.dirname((os.path.dirname(pkg_resources.resource_filename(__name__, "report_template.html")))) + "/resources/"
+    template_loader = FileSystemLoader(searchpath=template_location)
+
+    template_env = Environment(
+        loader=template_loader,
         autoescape=select_autoescape()
     )
-    template = env.get_template("report_template.html")
 
+    template = template_env.get_or_select_template("report_template.html")
 
     # loops through the dataframe column by column and suppreses low
     # numbers, make a cohort report and then a graph

@@ -14,6 +14,8 @@ setup(
     author="OpenSAFELY",
     author_email="tech@opensafely.org",
     python_requires=">=3.7",
-    entry_points={"console_scripts": ["cohort-report=cohort-report:main"]},
+    install_requires=["pandas", "plotly", "pyarrow", "jinja2"],
+    data_files=[("/templates", ['resources/report_template.html'])],
+    entry_points={"console_scripts": ["cohortreport=entrypoint:main"]},
     classifiers=["License :: OSI Approved :: GNU General Public License v3 (GPLv3)"],
 )
