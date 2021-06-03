@@ -1,4 +1,4 @@
-# Sorted list of development and production requirements
+#  List of development and production requirements
 black
 click
 flake8
