@@ -1,8 +1,0 @@
-{
-  "inputs": {
-    "input_dta": "tests/test_data/input.dta"
-  },
-  "config": {
-    "output_path": "tests/test_outputs"
-  }
-}
