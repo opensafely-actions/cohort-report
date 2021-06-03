@@ -1,9 +1,11 @@
 from setuptools import find_namespace_packages, setup
 
+from version import __version__
+
 
 setup(
     name="cohort-report-action",
-    version="0.0.1",
+    version=__version__,
     packages=find_namespace_packages(exclude=["tests"]),
     include_package_data=True,
     url="https://github.com/opensafely-core/cohort-report-action",
