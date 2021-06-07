@@ -2,8 +2,11 @@
 FROM ghcr.io/opensafely-core/python:latest as base-python
 
 # Upgrade pip and cohort report
-RUN python -m pip install -U pip setuptools wheel && \
-    python -m pip install cohort-report-action
+RUN python -m pip install -U pip setuptools wheel
+
+# local install
+COPY ./ ./
+RUN python -m pip install .
 
 # labeling
 LABEL org.opencontainers.image.title="report" \
@@ -13,4 +16,3 @@ LABEL org.opencontainers.image.title="report" \
 
 # re-use entrypoint from base-docker image
 ENV ACTION_EXEC=report
-

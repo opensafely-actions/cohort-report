@@ -32,3 +32,10 @@ format:
 .PHONY: typehint
 typehint:
 	mypy --ignore-missing-imports --exclude='venv/' ./
+
+IMAGE_NAME=local-cohort-report
+build:
+	docker build . -t $(IMAGE_NAME)
+
+test-docker: build
+    docker run --rm -v tests:/workspace $(IMAGE_NAME) test_data/input.csv --config test1_config.json
