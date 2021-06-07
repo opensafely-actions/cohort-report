@@ -2,6 +2,7 @@ from setuptools import find_namespace_packages, setup
 
 from version import __version__
 
+
 setup(
     name="cohort-report-action",
     version=__version__,
