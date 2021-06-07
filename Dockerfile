@@ -5,8 +5,12 @@ FROM ghcr.io/opensafely-core/python:latest as base-python
 RUN python -m pip install -U pip setuptools wheel && \
     python -m pip install cohort-report-action
 
-# point to right file
-CMD python entrypoint.py
+# labeling
+LABEL org.opencontainers.image.title="report" \
+      org.opencontainers.image.description="Cohort Report action for opensafely.org" \
+      org.opencontainers.image.source="https://github.com/opensafely-core/cohort-report-action" \
+      org.opensafely.action="report"
 
-# define entry point
-ENTRYPOINT ["report"]
+# re-use entrypoint from base-docker image
+ENV ACTION_EXEC=report
+
