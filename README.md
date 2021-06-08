@@ -18,15 +18,7 @@ no output path is provided, the default place is `cohort_reports_outputs/`. The 
 will make this folder if it does not exist. 
  
 ### Running this action
-It can be run in two ways:
-
-##### Run locally with Python
-```bash
-python3 entrypoint.py [inputfile] --config [config_json_file]
-
-# for example to run test input file and config
-python entrypoint.py tests/test_data/input.csv --config tests/test_json/test1_config.json
-```
+It can be run by:
 
 ##### Running as CLI
 You can pip install this package and use as a command line tool. 
