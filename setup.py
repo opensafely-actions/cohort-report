@@ -1,6 +1,6 @@
 from setuptools import find_namespace_packages, setup
 
-from version import __version__
+from cohortreport.version import __version__
 
 
 setup(
@@ -17,7 +17,6 @@ setup(
     author_email="tech@opensafely.org",
     python_requires=">=3.7",
     install_requires=["pandas", "plotly", "pyarrow", "jinja2"],
-    data_files=[("/templates", ["resources/report_template.html"])],
-    entry_points={"console_scripts": ["cohortreport=entrypoint:main"]},
+    entry_points={"console_scripts": ["cohortreport=cohortreport.__main__:main"]},
     classifiers=["License :: OSI Approved :: GNU General Public License v3 (GPLv3)"],
 )

@@ -4,9 +4,9 @@ import json
 import os
 from pathlib import Path
 
-from cohort_report.report import make_report
-from utils_entrypoint import load_config
-from version import __version__
+from cohortreport.report import make_report
+from cohortreport.utils import load_config
+from cohortreport.version import __version__
 
 
 class ActionConfig:

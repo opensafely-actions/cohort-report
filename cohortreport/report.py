@@ -5,14 +5,14 @@ from typing import Dict, Union
 import pkg_resources
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from cohort_report.errors import ConfigAndFileMismatchError
-from cohort_report.processing import (
+from cohortreport.errors import ConfigAndFileMismatchError
+from cohortreport.processing import (
     change_binary_to_categorical,
     load_study_cohort,
     suppress_low_numbers,
     type_variables_in_df,
 )
-from cohort_report.series_report import series_graph, series_report
+from cohortreport.series_report import series_graph, series_report
 
 
 def make_report(
@@ -78,6 +78,8 @@ def make_report(
         )
         + "/resources/"
     )
+
+    template_location = os.getcwd() + "/cohortreport/resources/"
     template_loader = FileSystemLoader(searchpath=template_location)
 
     template_env = Environment(loader=template_loader, autoescape=select_autoescape())

@@ -9,7 +9,7 @@ from pandas.api.types import (
     is_numeric_dtype,
 )
 
-from .errors import ColumnsDoNotMatch, ImportActionError
+from cohortreport.errors import ColumnsDoNotMatch, ImportActionError
 
 
 def suppress_low_numbers(series: pd.Series, limit: int = 6) -> pd.Series:

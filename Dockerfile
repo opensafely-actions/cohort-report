@@ -1,9 +1,6 @@
 # Grab the docker python image
 FROM ghcr.io/opensafely-core/python:latest as base-python
 
-# Upgrade pip and cohort report
-RUN python -m pip install -U pip setuptools wheel
-
 # local install
 COPY ./ ./
 RUN python -m pip install .
