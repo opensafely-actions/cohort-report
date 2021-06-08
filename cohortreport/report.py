@@ -2,7 +2,6 @@ import os
 from pathlib import Path
 from typing import Dict, Union
 
-import pkg_resources
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from cohortreport.errors import ConfigAndFileMismatchError
@@ -68,17 +67,6 @@ def make_report(
     if variable_types is not None:
         df = type_variables_in_df(df=df, variables=variable_types)
 
-    template_location = (
-        os.path.dirname(
-            (
-                os.path.dirname(
-                    pkg_resources.resource_filename(__name__, "report_template.html")
-                )
-            )
-        )
-        + "/resources/"
-    )
-
     template_location = os.getcwd() + "/cohortreport/resources/"
     template_loader = FileSystemLoader(searchpath=template_location)
 
@@ -104,8 +92,8 @@ def make_report(
 
     os.makedirs(output_dir, exist_ok=True)
 
-    with open(f"{output_dir}/descriptives_{input_file_name}.html", "w") as f:
-        f.write(html)
+    with open(f"{output_dir}/descriptives_{input_file_name}.html", "wb") as f:
+        f.write(html.encode('utf-8'))
         print(
             f"Created cohort report at {output_dir}descriptives_{input_file_name}.html"
         )

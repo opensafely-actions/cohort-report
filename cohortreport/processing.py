@@ -27,12 +27,6 @@ def suppress_low_numbers(series: pd.Series, limit: int = 6) -> pd.Series:
          pd.Series: A series which is either the same as original or
             empty if small number suppressed
     """
-    if not isinstance(series, pd.Series):
-        raise TypeError(
-            f"A {type(series)} has been passed to the suppress_low_numbers() function."
-            f"This function accepts pandas Series only."
-        )
-
     if is_categorical_dtype(series.dtype) or is_bool_dtype(series.dtype):
         if ~(series.value_counts() < limit).any():
             return series
