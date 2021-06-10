@@ -1,8 +1,0 @@
-{
-  "inputs": {
-    "input_feather": "tests/test_data/input.feather"
-  },
-  "config": {
-    "output_path": "tests/test_outputs"
-  }
-}

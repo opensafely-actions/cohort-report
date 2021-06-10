@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cohort Report</title>
+    	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+    <h1>Cohort Report</h1>
+    <p>
+        This report is generated from the study population passed in. Low
+        number suppression is applied for variables with counts 5 or less
+        as standard.
+    </p>
+
+{% for variable, report in reports.items() %}
+
+<h4> {{ variable }} </h4>
+    {% if report.written_report is iterable and report.written_report is not string %}
+        <div class="row">
+            <div class="col">
+            <table class="table table-sm">
+                <thead class="thead-dark">
+                <tr>
+                    <th>Feature</th>
+                    <th> Value </th>
+                </tr>
+                </thead>
+            {% for key, val in report.written_report.iteritems() %}
+                <tbody>
+                    <tr>
+                      <td>{{key}}</td>
+                      <td>{{val}}</td>
+                    </tr>
+                  </tbody>
+                {% endfor %}
+                </table>
+                </div>
+            <div class="col"> </div>
+
+            </div>
+    {% else %}
+        <p> {{report.written_report}} </p>
+    {% endif %}
+        {{report.graph}}
+
+{% endfor %}
+</div>
+</body>
+</html>

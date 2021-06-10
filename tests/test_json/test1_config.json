@@ -1,21 +1,16 @@
 {
-  "inputs": {
-    "input_csv": "tests/test_data/input.csv"
+  "variable_types": {
+    "age": "int",
+    "sex": "categorical",
+    "ethnicity": "categorical",
+    "bmi": "float",
+    "diabetes": "binary",
+    "chronic_liver_disease": "binary",
+    "imd": "categorical",
+    "region": "categorical",
+    "stp": "categorical",
+    "rural_urban": "categorical",
+    "prior_covid_date": "date"
   },
-  "config": {
-    "variable_types": {
-      "age": "int",
-      "sex": "categorical",
-      "ethnicity": "categorical",
-      "bmi": "float",
-      "diabetes": "binary",
-      "chronic_liver_disease": "binary",
-      "imd": "categorical",
-      "region": "categorical",
-      "stp": "categorical",
-      "rural_urban": "categorical",
-      "prior_covid_date": "date"
-    },
-    "output_path": "tests/test_outputs"
-  }
+  "output_path": "tests/test_outputs/"
 }

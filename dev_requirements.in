@@ -1,0 +1,13 @@
+#  List of development and production requirements
+black
+click
+flake8
+isort
+matplotlib
+pandas
+pip-tools
+plotly
+pyarrow
+pytest
+jinja2
+mypy
