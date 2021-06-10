@@ -92,8 +92,8 @@ def make_report(
 
     os.makedirs(output_dir, exist_ok=True)
 
-    with open(f"{output_dir}/descriptives_{input_file_name}.html", "wb") as f:
-        f.write(html.encode('utf-8'))
+    with open(f"{output_dir}/descriptives_{input_file_name}.html", "w", encoding="utf-8") as f:
+        f.write(html)
         print(
             f"Created cohort report at {output_dir}descriptives_{input_file_name}.html"
         )

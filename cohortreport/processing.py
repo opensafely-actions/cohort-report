@@ -1,6 +1,8 @@
 from pathlib import Path
 from typing import Dict
 
+import bulwark.checks as ck
+
 import pandas as pd
 from pandas.api.types import (
     is_bool_dtype,
@@ -9,7 +11,7 @@ from pandas.api.types import (
     is_numeric_dtype,
 )
 
-from cohortreport.errors import ColumnsDoNotMatch, ImportActionError
+from cohortreport.errors import ImportActionError
 
 
 def suppress_low_numbers(series: pd.Series, limit: int = 6) -> pd.Series:
@@ -37,8 +39,10 @@ def suppress_low_numbers(series: pd.Series, limit: int = 6) -> pd.Series:
         ):
             return series
 
-    # returns empty series if does not satisfy limit criteria
-    empty_series = pd.Series()
+    # returns empty series if does not satisfy limit criteria.
+    # Set as float64 -  DeprecationWarning: The default dtype for empty
+    # Series will be 'object' instead of 'float64' in a future version.
+    empty_series = pd.Series(dtype="float64")
     empty_series.name = series.name
 
     return empty_series
@@ -79,9 +83,24 @@ def load_study_cohort(path: Path) -> pd.DataFrame:
     return df
 
 
+def check_columns_match(df: pd.DataFrame, variables: Dict) -> pd.DataFrame:
+    """
+    Checks the variable config contains all the columns within
+    the dataframe passed in
+
+    Args:
+        df: Dataframe being checked.
+        variables: Config of the columns
+
+    Returns: Dataframe depending if df columns match the variable dict
+    """
+    if set(df.columns.drop("patient_id")) != set(variables.keys()):
+        raise AssertionError("Columns do not match config")
+    return df
+
 def type_variables_in_df(df: pd.DataFrame, variables: Dict) -> pd.DataFrame:
     """
-    Takes in a datafrmae which has been loaded from either a csv or a csv.gz and
+    Takes in a dataframe which has been loaded from either a csv or a csv.gz and
     therefore does not have type information. It takes in a variable dict which
     comes from the project.yaml and is passed in as a config json object.
     It then assigns various types to the df columns.
@@ -93,29 +112,10 @@ def type_variables_in_df(df: pd.DataFrame, variables: Dict) -> pd.DataFrame:
     Returns:
         pd.Dataframe: Dataframes with types applied
     """
-    if not isinstance(df, pd.DataFrame):
-        raise TypeError(
-            f"A {type(df)} has been passed to the type_variables_in_df() function."
-            f"This function accepts pandas Dataframe type only."
-        )
+    # Check columns in variable dict match columns
+    checked_df = ck.custom_check(df=df, check_func=check_columns_match, variables=variables)
 
-    if len(df.columns) != (len(variables.keys()) + 1):
-        raise ColumnsDoNotMatch(
-            "The number of columns in your dataframe does not "
-            "match the number of variables in your config 'variable_type'"
-        )
-
-    for column in df.columns:
-        if column == "patient_id":
-            continue
-        elif column not in variables.keys():
-            missing_columns = set(df.columns.drop("patient_id")) - set(variables)
-            if missing_columns:
-                missing_columns_str = ", ".join(list(missing_columns))
-                raise ColumnsDoNotMatch(
-                    f"Your data frame is missing columns: {missing_columns_str}"
-                )
-
+    # Type columns
     for column_name, column_type in variables.items():
         if column_type == "int":
             variables[column_name] = "int64"
@@ -128,8 +128,8 @@ def type_variables_in_df(df: pd.DataFrame, variables: Dict) -> pd.DataFrame:
         elif column_type == "binary":
             variables[column_name] = "int64"
 
-    df = df.astype(variables)
-    return df
+    typed_df = checked_df.astype(variables)
+    return typed_df
 
 
 def change_binary_to_categorical(series: pd.Series) -> pd.Series:
@@ -142,11 +142,6 @@ def change_binary_to_categorical(series: pd.Series) -> pd.Series:
     Returns:
         pd.Series: Series with binary values changed to categorical type.
     """
-    if not isinstance(series, pd.Series):
-        raise TypeError(
-            f"A {type(series)} has been passed to the change_binary_to_categorical() "
-            f"function. This function accepts pandas Series only."
-        )
     # if the data is only ints of 0 or 1, it is a binary data type. this is
     # changed into category
     if series.isin([0, 1]).all():
