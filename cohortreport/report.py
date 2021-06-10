@@ -21,12 +21,12 @@ def make_report(
     Loads the data and create a graph per column.
 
     Args:
-        path (str): Path to the cohort created, usually by cohortextractor, or by other
+        path: Path to the cohort created, usually by cohortextractor, or by other
             study definition creator tools (for example matching). This
             is a DataFrame, with patient_id as first column
-        output_dir (str): Path to the output directory
-        input_file_name (str): name of the input file
-        variable_types (dict or None): Either none or a dict of the types of
+        output_dir: Path to the output directory
+        input_file_name: name of the input file
+        variable_types: Either none or a dict of the types of
         data in the column
             if not a typed input. For example, if plain csv.
 

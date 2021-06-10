@@ -19,8 +19,8 @@ def suppress_low_numbers(series: pd.Series, limit: int = 6) -> pd.Series:
     than the limit (default 5 or less).
 
     Args:
-        series (pd.Series): A dataframe column
-        limit (int): limit at which any counts below this should
+        series: A dataframe column
+        limit: limit at which any counts below this should
             be suppressed. Default value is 6.
 
     Returns:
@@ -87,8 +87,8 @@ def type_variables_in_df(df: pd.DataFrame, variables: Dict) -> pd.DataFrame:
     It then assigns various types to the df columns.
 
     Args:
-        df (Dataframe): data to be changed and typed
-        variables (Dict): config that maps variable name (i.e. column name) to type
+        df: data to be changed and typed
+        variables: config that maps variable name (i.e. column name) to type
 
     Returns:
         pd.Dataframe: Dataframes with types applied
@@ -138,7 +138,7 @@ def change_binary_to_categorical(series: pd.Series) -> pd.Series:
     categorical type.
 
     Args:
-        series (pd.Series): Data series being transformed
+        series: Data series being transformed
     Returns:
         pd.Series: Series with binary values changed to categorical type.
     """

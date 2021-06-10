@@ -13,7 +13,7 @@ def series_report(series: pd.Series) -> Union[pd.Series, str]:
     or a description of the data
 
     Args:
-        series (pd.Series): data column being reported on
+        series: data column being reported on
     Returns:
         string or pd.Series
     """
@@ -38,7 +38,7 @@ def series_graph(series: pd.Series) -> Union[str, Markup]:
     categorical data
 
      Args:
-        series (pd.Series): data column that is being graphed
+        series: data column that is being graphed
     Returns:
         str or Markup: HTML marked safe image or a string
     """

@@ -10,11 +10,11 @@ def load_config(config) -> Dict:
     are left as default values
 
     Args:
-        config (dict): dictionary of the cohort report configuration
+        config: dictionary of the cohort report configuration
             taken from json
 
     Returns:
-        Dict (cfg): Configuration dictionary to be passed to entry point.
+        cfg: Configuration dictionary to be passed to entry point.
     """
     cfg = DEFAULTS.copy()
     cfg.update(config)
