@@ -16,7 +16,8 @@ setup(
     author="OpenSAFELY",
     author_email="tech@opensafely.org",
     python_requires=">=3.7",
-    install_requires=["pandas", "plotly", "pyarrow", "jinja2"],
+    install_requires=["pandas", "plotly", "pyarrow", "jinja2", "bulwark"],
+    data_files=[("/templates", ["cohortreport/resources/report_template.html"])],
     entry_points={"console_scripts": ["cohortreport=cohortreport.__main__:main"]},
     classifiers=["License :: OSI Approved :: GNU General Public License v3 (GPLv3)"],
 )

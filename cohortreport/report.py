@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from typing import Dict, Union
+import pkg_resources
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
@@ -67,9 +68,18 @@ def make_report(
     if variable_types is not None:
         df = type_variables_in_df(df=df, variables=variable_types)
 
-    template_location = os.getcwd() + "/cohortreport/resources/"
-    template_loader = FileSystemLoader(searchpath=template_location)
+    template_location = (
+            os.path.dirname(
+                (
+                    os.path.dirname(
+                        pkg_resources.resource_filename(__name__, "report_template.html")
+                    )
+                )
+            )
+            + "/cohortreport/resources/"
+    )
 
+    template_loader = FileSystemLoader(searchpath=template_location)
     template_env = Environment(loader=template_loader, autoescape=select_autoescape())
 
     template = template_env.get_or_select_template("report_template.html")
