@@ -34,8 +34,11 @@ typehint:
 	mypy --ignore-missing-imports --exclude='venv/' ./
 
 IMAGE_NAME=local-cohort-report
+.PHONY: build
+build: export DOCKER_BUILDKIT=1
 build:
 	docker build . -t $(IMAGE_NAME)
 
+.PHONY: test-docker
 test-docker: build
-	docker run --rm -v :/workspace $(IMAGE_NAME) tests/test_data/input.csv --config tests/test_json/test1_config.json
+	docker run --rm -v $$PWD:/workspace $(IMAGE_NAME) tests/test_data/input.csv --config tests/test_json/test1_config.json

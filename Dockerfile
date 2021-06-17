@@ -1,9 +1,5 @@
-# Grab the docker python image
-FROM ghcr.io/opensafely-core/python:latest as base-python
-
-# local install
-COPY ./ ./
-RUN python -m pip install .
+# syntax=docker/dockerfile:1.2
+FROM ghcr.io/opensafely-core/python:latest 
 
 # labeling
 LABEL org.opencontainers.image.title="cohortreport" \
@@ -13,3 +9,6 @@ LABEL org.opencontainers.image.title="cohortreport" \
 
 # re-use entrypoint from base-docker image
 ENV ACTION_EXEC=cohortreport
+
+# local install
+RUN --mount=type=bind,target=/src python -m pip install /src

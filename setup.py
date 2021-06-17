@@ -6,8 +6,7 @@ from cohortreport.version import __version__
 setup(
     name="cohort-report-action",
     version=__version__,
-    packages=find_namespace_packages(exclude=["tests"]),
-    include_package_data=True,
+    packages=["cohortreport"],
     url="https://github.com/opensafely-core/cohort-report-action",
     description="Command line tool for graphing study cohorts",
     long_description="Command line tool for creating graphs and tables describing "
@@ -17,7 +16,8 @@ setup(
     author_email="tech@opensafely.org",
     python_requires=">=3.7",
     install_requires=["pandas", "plotly", "pyarrow", "jinja2", "bulwark"],
-    data_files=[("/templates", ["cohortreport/resources/report_template.html"])],
+    include_package_data=True,
+    package_data={"cohortreport": ["resources/report_template.html"]},
     entry_points={"console_scripts": ["cohortreport=cohortreport.__main__:main"]},
     classifiers=["License :: OSI Approved :: GNU General Public License v3 (GPLv3)"],
 )
