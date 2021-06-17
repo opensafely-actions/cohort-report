@@ -63,6 +63,7 @@ def main():
     """
     Command line tool for running cohort report.
     """
+
     # make args parser
     parser = argparse.ArgumentParser(
         description="Outputs variable report and graphs from cohort"
