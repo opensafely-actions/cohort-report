@@ -98,6 +98,7 @@ def check_columns_match(df: pd.DataFrame, variables: Dict) -> pd.DataFrame:
         raise AssertionError("Columns do not match config")
     return df
 
+
 def type_variables_in_df(df: pd.DataFrame, variables: Dict) -> pd.DataFrame:
     """
     Takes in a dataframe which has been loaded from either a csv or a csv.gz and
@@ -113,7 +114,9 @@ def type_variables_in_df(df: pd.DataFrame, variables: Dict) -> pd.DataFrame:
         pd.Dataframe: Dataframes with types applied
     """
     # Check columns in variable dict match columns
-    checked_df = ck.custom_check(df=df, check_func=check_columns_match, variables=variables)
+    checked_df = ck.custom_check(
+        df=df, check_func=check_columns_match, variables=variables
+    )
 
     # Type columns
     for column_name, column_type in variables.items():
