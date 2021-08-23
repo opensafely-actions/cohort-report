@@ -2,7 +2,6 @@ from pathlib import Path
 from typing import Dict
 
 import bulwark.checks as ck
-
 import pandas as pd
 from pandas.api.types import (
     is_bool_dtype,
@@ -11,7 +10,7 @@ from pandas.api.types import (
     is_numeric_dtype,
 )
 
-from cohortreport.errors import ImportActionError
+from action.errors import ImportActionError
 
 
 def suppress_low_numbers(series: pd.Series, limit: int = 6) -> pd.Series:
