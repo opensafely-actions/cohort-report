@@ -18,7 +18,7 @@ actions:
         cohort: output/input.csv
 
   generate_report:
-    run: cohortreport:v1.0 output/input.csv
+    run: cohortreport:v1.0.0 output/input.csv
     needs: [generate_study_population]
     config:
       variable_types:
@@ -46,7 +46,7 @@ whole graph is redacted.
 Notice the `run` and `config` properties.
 
 The `run` property passes a specific input table to a specific version of cohortreport.
-In this case, the specific input file is *output/input.csv* and the specific version of cohortreport is v1.0.
+In this case, the specific input file is *output/input.csv* and the specific version of cohortreport is v1.0.0.
 The `config` property passes configuration to cohortreport; for more information, see *Configuration*.
 
 ### Configuration
