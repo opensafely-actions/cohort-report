@@ -1,0 +1,8 @@
+#!/bin/bash
+# Runs black and isort over all Python files and makes changes
+
+set -euo pipefail
+
+echo "Running black and isort"
+black .
+isort .

@@ -1,0 +1,8 @@
+#!/bin/bash
+# Runs black, isort, and flake8 over all Python files but does not make changes
+
+set -euo pipefail
+
+$VIRTUAL_ENV/bin/black --check .
+$VIRTUAL_ENV/bin/isort --check-only --diff .
+$VIRTUAL_ENV/bin/flake8

@@ -1,0 +1,6 @@
+#!/bin/bash
+# Runs tests
+
+set -euo pipefail
+
+$VIRTUAL_ENV/bin/pytest
