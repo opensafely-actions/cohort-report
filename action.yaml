@@ -1,1 +1,1 @@
-run: python:latest python -m action.__main__
+run: python:latest python -m cohortreport.__main__

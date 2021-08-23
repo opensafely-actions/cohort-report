@@ -45,7 +45,7 @@ fix:
 
 .PHONY: test
 test:
-	@echo "Runing tests" && \
+	@echo "Running tests" && \
 		sh scripts/test \
 		|| exit 1
 

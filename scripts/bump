@@ -1,6 +1,6 @@
 #!/bin/bash
-# Bumps the version string in action/VERSION, creating a annotated tag for the new
-# version and a commit for action/VERSION.
+# Bumps the version string in cohortreport/VERSION, creating a annotated tag for the new
+# version and a commit for cohortreport/VERSION.
 
 set -euo pipefail
 

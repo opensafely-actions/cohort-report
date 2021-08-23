@@ -5,14 +5,14 @@ from typing import Dict, Union
 import pkg_resources
 from jinja2 import Template, select_autoescape
 
-from action.errors import ConfigAndFileMismatchError
-from action.processing import (
+from cohortreport.errors import ConfigAndFileMismatchError
+from cohortreport.processing import (
     change_binary_to_categorical,
     load_study_cohort,
     suppress_low_numbers,
     type_variables_in_df,
 )
-from action.series_report import series_graph, series_report
+from cohortreport.series_report import series_graph, series_report
 
 
 def make_report(
@@ -69,7 +69,7 @@ def make_report(
         df = type_variables_in_df(df=df, variables=variable_types)
 
     template_str = pkg_resources.resource_string(
-        "action", "resources/report_template.html"
+        "cohortreport", "resources/report_template.html"
     )
     template = Template(template_str.decode("utf8"))
 

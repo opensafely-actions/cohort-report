@@ -5,9 +5,9 @@ import os
 from pathlib import Path
 from typing import Dict, List
 
-from action import __version__
-from action.report import make_report
-from action.utils import load_config
+from cohortreport import __version__
+from cohortreport.report import make_report
+from cohortreport.utils import load_config
 
 
 def convert_config(file_or_string: str) -> Dict:
