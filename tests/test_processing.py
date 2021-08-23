@@ -3,8 +3,8 @@ from unittest import mock
 
 import pytest
 
-from action.processing import load_study_cohort
 from action.errors import ImportActionError
+from action.processing import load_study_cohort
 
 
 class TestLoadStudyCohort:
