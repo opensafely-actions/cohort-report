@@ -1,10 +1,9 @@
-# main functionality
--e file:.
-
 # dev tools
 black
+bump2version
 flake8
-pip-tools
+flake8-builtins
+flake8-implicit-str-concat
+isort
 mypy
 pytest
-isort
