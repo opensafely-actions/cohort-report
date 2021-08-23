@@ -1,6 +1,3 @@
--c requirements.prod.in
--r requirements.prod.in
-
 # dev tools
 black
 bump2version
