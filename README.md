@@ -1,95 +1,67 @@
-# cohort-report-action
-Action that can be run by project yaml which gives graphs of cohort variables. 
+# Cohort Report
 
-### Action Arguments
-The action has one required argument called input_files. This is a file or list 
-of files that you wish to run the cohort action on. 
+## Summary
 
-##### Config structure
-There is one optional argument `--config`. The config can be a string or a json file.
+Cohort Report outputs graphs of variables in a study input file.
 
-If the input file does not have typing inbuilt, the `--config` should contain
-a key called `variable_types`containing the variable types as key-value pairs. See
-[test1_config](tests/test_json/test1_config.json). 
+## Usage
 
-If you require your cohort report to be saved 
-in a particular folder, you can specify this in the `--config` with `output_path`. If 
-no output path is provided, the default place is `cohort_reports_outputs/`. The action 
-will make this folder if it does not exist. 
- 
-### Running this action
-It can be run by:
-
-##### Running as CLI
-You can pip install this package and use as a command line tool. 
-```bash
-cohortreport [inputfile or list of files] --config [config_json_file or json_str]
-
-# for example to run an input file and config
-cohortreport data/input.csv --config test_actions_jsons/test1_config.json
-
-# to run list of input files and same config for each file
-cohortreport data/input.csv data/second_input.csv --config test_actions_jsons/test1_config.json
-```
-
-### Project yaml
-This action can be invoked from the `project.yaml`. This is passed into json. 
+Consider the following extract from a study's *project.yaml*:
 
 ```yaml
-actions: 
-  cohort_report:
-    run: cohortreport:latest input.csv
-config:
-    variable_types:
-      age: int
-      sex: categorical
-      ethnicity: categorical
-      bmi: float
-      diabetes: binary
-      chronic_liver_disease: binary
-      imd: categorical
-      region: categorical
-      stp: categorical
-      rural_urban: categorical
-      prior_covid_date: date
-    output_path: outputs
+actions:
+
+  generate_study_population:
+    run: cohortextractor:latest generate_cohort
+    outputs:
+      highly_sensitive:
+        cohort: output/input.csv
+
+  generate_report:
+    run: cohortreport:v1.0 output/input.csv
+    needs: [generate_study_population]
+    config:
+      variable_types:
+          age: int
+          sex: categorical
+          ethnicity: categorical
+          bmi: float
+          diabetes: binary
+          chronic_liver_disease: binary
+          imd: categorical
+          region: categorical
+          stp: categorical
+          rural_urban: categorical
+          prior_covid_date: date
+      output_path: output/cohort_reports_outputs
+    outputs:
+      moderately_sensitive:
+        reports: output/cohort_reports_outputs/descriptives_input.html
 ```
 
-## Local Development
+The `generate_report` action outputs one HTML document with a graph for each variable specified.
+Where graphs have a category of 5 or less, small number suppression is applied and the 
+whole graph is redacted. 
 
-For local (non-Docker) development, first install [pyenv][] and execute:
+Notice the `run` and `config` properties.
 
-```sh
-pyenv install $(pyenv local)
-```
+The `run` property passes a specific input table to a specific version of cohortreport.
+In this case, the specific input file is *output/input.csv* and the specific version of cohortreport is v1.0.
+The `config` property passes configuration to cohortreport; for more information, see *Configuration*.
 
-Then, execute:
+### Configuration
 
-```sh
-python3 -m venv venv
-source venv/bin/activate
-pip install --upgrade pip
-pip install -r dev_requirements.txt
-```
+`output_path`, which defaults to `cohort_reports_outputs`.
+Save the outputs to the given path.
+If the given path does not exist, then it is created.
 
-## QA
-Run `make` to access Makefile commands. Black, flake8 and mypy are available 
-and have a standard setup. 
+---
 
-## Tests
+`variable_types` - this is an optional argument that should be used if the input files
+contain data without a type, for example, a CSV. `cohortreport` can take in other files 
+such as '.feather' and '.dta' which contain the type of the data in each column. In these 
+cases, a `variable_types` config if not needed. 
 
-If you have a local development environment,
-then the following command will write [pytest][]'s output to the terminal:
+## Developer docs
 
-```sh
-python -m pytest
-```
-
-You can also pass test modules, classes, methods, and functions to pytest:
-
-```sh
-python -m pytest tests/test_processing.py::test_load_study_cohort
-```
-
-[pyenv]: https://github.com/pyenv/pyenv
-[pytest]: https://docs.pytest.org/en/stable/
+Please see [DEVELOPERS.md](DEVELOPERS.md).
