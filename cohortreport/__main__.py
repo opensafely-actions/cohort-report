@@ -3,59 +3,53 @@ import argparse
 import json
 import os
 from pathlib import Path
+from typing import Dict, List
 
+from cohortreport import __version__
 from cohortreport.report import make_report
 from cohortreport.utils import load_config
-from cohortreport.version import __version__
 
 
-class ActionConfig:
-    def __init__(self, validator=None):
-        self.validator = validator
+def convert_config(file_or_string: str) -> Dict:
+    """
+    Takes in a JSON string or a path to a JSON file and outputs
+    the config as Python object such as a dict
+    Args:
+        file_or_string:
+    Returns:
+        Configuration as loaded JSON
+    """
+    path = Path(file_or_string)
+    try:
+        if path.exists():
+            with path.open() as f:
+                config = json.load(f)
+        else:
+            config = json.loads(file_or_string)
+    except json.JSONDecodeError as exc:
+        raise argparse.ArgumentTypeError(f"Could not parse {file_or_string}\n{exc}")
 
-    def __call__(self, file_or_string):
-        path = Path(file_or_string)
-        try:
-            if path.exists():
-                with path.open() as f:
-                    config = json.load(f)
-            else:
-                config = json.loads(file_or_string)
-        except json.JSONDecodeError as exc:
-            raise argparse.ArgumentTypeError(f"Could not parse {file_or_string}\n{exc}")
-
-        if self.validator:
-            try:
-                self.validator(config)
-            except Exception as exc:
-                raise argparse.ArgumentTypeError(f"Invalid action config:\n{exc}")
-
-        return config
-
-    @classmethod
-    def add_to_parser(
-        cls, parser, help="The configuration for the cohort report", validator=None
-    ):
-        parser.add_argument(
-            "--config",
-            required=True,
-            help=help,
-            type=ActionConfig(validator),
-        )
+    return config
 
 
-def load_cohort_report(input_files: list, config: dict) -> None:
+def run_action(input_files: List, config: Dict) -> None:
+    """
+    Takes each input file in turn and creates the HTML graphs for each
+    variable as per the configuration.
 
-    processed_config = load_config(config)
+    Args:
+        input_files: The input files from which the graphs are created.
+        config: The configuration as a JSON object or str
+    """
 
     for input_file in input_files:
         input_filename_with_ext = os.path.basename(input_file)
         input_filename = os.path.splitext(input_filename_with_ext)[0]
         make_report(
             path=Path(input_file),
-            output_dir=processed_config["output_path"],
+            output_dir=config["output_path"],
             input_file_name=input_filename,
-            variable_types=processed_config["variable_types"],
+            variable_types=config["variable_types"],
         )
 
 
@@ -69,8 +63,11 @@ def main():
         description="Outputs variable report and graphs from cohort"
     )
 
-    # add configuration arg
-    ActionConfig.add_to_parser(parser)
+    # configurations
+    parser.add_argument(
+        "--config",
+        help="Configuration as either a JSON str or a path to a JSON file",
+    )
 
     # version
     parser.add_argument(
@@ -85,8 +82,12 @@ def main():
     # parse args
     args = parser.parse_args()
 
+    # convert config path to config dict
+    config_dict = convert_config(args.config)
+    processed_config = load_config(config_dict)
+
     # run cohort report
-    load_cohort_report(input_files=args.input_files, config=args.config)
+    run_action(input_files=args.input_files, config=processed_config)
 
 
 if __name__ == "__main__":

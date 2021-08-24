@@ -1,9 +1,9 @@
 import os
 from pathlib import Path
 from typing import Dict, Union
-import pkg_resources
 
-from jinja2 import Template, select_autoescape
+import pkg_resources
+from jinja2 import Template
 
 from cohortreport.errors import ConfigAndFileMismatchError
 from cohortreport.processing import (

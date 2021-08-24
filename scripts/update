@@ -1,0 +1,8 @@
+#!/bin/bash
+# Updates environment
+
+set -euo pipefail
+
+target="$1"
+
+$VIRTUAL_ENV/bin/pip-compile --generate-hashes --output-file=requirements.$target.txt requirements.$target.in && $VIRTUAL_ENV/bin/pip install --require-hashes -r requirements.$target.txt

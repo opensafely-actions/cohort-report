@@ -1,8 +1,6 @@
 from pathlib import Path
 from typing import Dict
 
-import bulwark.checks as ck
-
 import pandas as pd
 from pandas.api.types import (
     is_bool_dtype,
@@ -114,9 +112,7 @@ def type_variables_in_df(df: pd.DataFrame, variables: Dict) -> pd.DataFrame:
         pd.Dataframe: Dataframes with types applied
     """
     # Check columns in variable dict match columns
-    checked_df = ck.custom_check(
-        df=df, check_func=check_columns_match, variables=variables
-    )
+    checked_df = check_columns_match(df=df, variables=variables)
 
     # Type columns
     for column_name, column_type in variables.items():
