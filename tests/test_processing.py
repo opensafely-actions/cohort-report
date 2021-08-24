@@ -1,13 +1,18 @@
+import datetime as dt
 from pathlib import Path
 from unittest import mock
-import pandas as pd
-from pandas import testing
-import datetime as dt
 
+import pandas as pd
 import pytest
+from pandas import testing
 
 from cohortreport.errors import ImportActionError
-from cohortreport.processing import load_study_cohort, suppress_low_numbers, check_columns_match, type_variables_in_df
+from cohortreport.processing import (
+    check_columns_match,
+    load_study_cohort,
+    suppress_low_numbers,
+    type_variables_in_df,
+)
 
 
 class TestSuppressSmallNumbers:
@@ -61,12 +66,13 @@ class TestLoadStudyCohort:
         with pytest.raises(ImportActionError):
             load_study_cohort(Path("input.xlsx"))  # No chance!
 
+
 class TestCheckColumnsMatch:
     @staticmethod
     def table_factory():
-        return pd.DataFrame({"patient_id": [1, 2],
-                                "copd": [1, 0],
-                                "sex": ["male", "female"]})
+        return pd.DataFrame(
+            {"patient_id": [1, 2], "copd": [1, 0], "sex": ["male", "female"]}
+        )
 
     def test_columns_no_match(self):
         test_df = self.table_factory()
@@ -75,20 +81,25 @@ class TestCheckColumnsMatch:
 
     def test_columns_with_match(self):
         expected_df = self.table_factory()
-        observed_df = check_columns_match(expected_df, {"copd": "float64", "sex": "categorical"})
+        observed_df = check_columns_match(
+            expected_df, {"copd": "float64", "sex": "categorical"}
+        )
         testing.assert_frame_equal(observed_df, expected_df)
 
 
 class TestTypeVariables:
     @staticmethod
     def table_factory():
-        return pd.DataFrame({"patient_id": [1, 2],
-                             "test_binary": [1, 0],
-                             "test_categorical": ["male", "female"],
-                             "test_int": [56, 65],
-                             "test_date": [dt.datetime.now(), dt.datetime.now()],
-                             "test_float": [1.2, 5.4]
-                             })
+        return pd.DataFrame(
+            {
+                "patient_id": [1, 2],
+                "test_binary": [1, 0],
+                "test_categorical": ["male", "female"],
+                "test_int": [56, 65],
+                "test_date": [dt.datetime.now(), dt.datetime.now()],
+                "test_float": [1.2, 5.4],
+            }
+        )
 
     def test_type_variable_match(self):
         variable_dict = {
@@ -96,13 +107,13 @@ class TestTypeVariables:
             "test_categorical": "categorical",
             "test_int": "int",
             "test_date": "date",
-            "test_float": "float64"
+            "test_float": "float64",
         }
         test_df = self.table_factory()
         observed_df = type_variables_in_df(df=test_df, variables=variable_dict)
 
-        assert observed_df['test_binary'].dtype == "int64"
-        assert observed_df['test_categorical'].dtype == "category"
-        assert observed_df['test_int'].dtype == "int64"
-        assert observed_df['test_date'].dtype == "category"
-        assert observed_df['test_float'].dtype == "float64"
+        assert observed_df["test_binary"].dtype == "int64"
+        assert observed_df["test_categorical"].dtype == "category"
+        assert observed_df["test_int"].dtype == "int64"
+        assert observed_df["test_date"].dtype == "category"
+        assert observed_df["test_float"].dtype == "float64"
