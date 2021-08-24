@@ -4,7 +4,7 @@
 
 set -euo pipefail
 
-current_version="`cat action/VERSION`"
+current_version="`cat cohortreport/VERSION`"
 version_type="$1"
 
-$VIRTUAL_ENV/bin/bump2version --current-version $current_version --tag --commit $version_type action/VERSION
+$VIRTUAL_ENV/bin/bump2version --current-version $current_version --tag --commit $version_type cohortreport/VERSION
