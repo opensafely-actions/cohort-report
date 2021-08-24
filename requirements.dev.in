@@ -9,3 +9,4 @@ flake8-implicit-str-concat
 isort
 mypy
 pytest
+types-setuptools
