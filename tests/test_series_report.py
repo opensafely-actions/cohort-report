@@ -1,6 +1,7 @@
+from unittest import mock
+
 import pandas as pd
 import pytest
-from unittest import mock
 
 from cohortreport.series_report import series_graph, series_report
 

@@ -6,8 +6,8 @@ import pandas as pd
 import pytest
 from pandas import testing
 
-from cohortreport.errors import ImportActionError
 from cohortreport import processing
+from cohortreport.errors import ImportActionError
 
 
 class TestSuppressSmallNumbers:
@@ -71,7 +71,9 @@ class TestCheckColumnsMatch:
 
     def test_columns_no_match(self, test_df):
         with pytest.raises(AssertionError):
-            processing.check_columns_match(test_df, {"not_copd": "float64", "sex": "categorical"})
+            processing.check_columns_match(
+                test_df, {"not_copd": "float64", "sex": "categorical"}
+            )
 
     def test_columns_match(self, test_df):
         observed_df = processing.check_columns_match(
@@ -89,7 +91,10 @@ class TestTypeVariables:
                 "test_binary": [1, 0],
                 "test_categorical": ["male", "female"],
                 "test_int": [56, 65],
-                "test_date": [datetime.datetime(2021, 8, 31, 9, 50, 29, 628483), datetime.datetime(2021, 8, 31, 9, 51, 15, 801522)],
+                "test_date": [
+                    datetime.datetime(2021, 8, 31, 9, 50, 29, 628483),
+                    datetime.datetime(2021, 8, 31, 9, 51, 15, 801522),
+                ],
                 "test_float": [1.2, 5.4],
             }
         )
@@ -102,7 +107,9 @@ class TestTypeVariables:
             "test_date": "date",
             "test_float": "float64",
         }
-        observed_df = processing.type_variables_in_df(df=test_df, variables=variable_dict)
+        observed_df = processing.type_variables_in_df(
+            df=test_df, variables=variable_dict
+        )
 
         assert observed_df["test_binary"].dtype == "int64"
         assert observed_df["test_categorical"].dtype == "category"
