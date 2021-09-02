@@ -1,6 +1,5 @@
 import pandas as pd
 import pytest
-import plotly.express as px
 from unittest import mock
 
 from cohortreport.series_report import series_graph, series_report
