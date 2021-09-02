@@ -63,28 +63,26 @@ class TestLoadStudyCohort:
 
 
 class TestCheckColumnsMatch:
-    @staticmethod
-    def table_factory():
+    @pytest.fixture
+    def test_df(self):
         return pd.DataFrame(
             {"patient_id": [1, 2], "copd": [1, 0], "sex": ["male", "female"]}
         )
 
-    def test_columns_no_match(self):
-        test_df = self.table_factory()
+    def test_columns_no_match(self, test_df):
         with pytest.raises(AssertionError):
             processing.check_columns_match(test_df, {"not_copd": "float64", "sex": "categorical"})
 
-    def test_columns_match(self):
-        expected_df = self.table_factory()
+    def test_columns_match(self, test_df):
         observed_df = processing.check_columns_match(
-            expected_df, {"copd": "float64", "sex": "categorical"}
+            test_df, {"copd": "float64", "sex": "categorical"}
         )
-        testing.assert_frame_equal(observed_df, expected_df)
+        testing.assert_frame_equal(observed_df, test_df)
 
 
 class TestTypeVariables:
-    @staticmethod
-    def table_factory():
+    @pytest.fixture
+    def test_df(self):
         return pd.DataFrame(
             {
                 "patient_id": [1, 2],
@@ -96,7 +94,7 @@ class TestTypeVariables:
             }
         )
 
-    def test_type_variable_match(self):
+    def test_type_variable_match(self, test_df):
         variable_dict = {
             "test_binary": "binary",
             "test_categorical": "categorical",
@@ -104,7 +102,6 @@ class TestTypeVariables:
             "test_date": "date",
             "test_float": "float64",
         }
-        test_df = self.table_factory()
         observed_df = processing.type_variables_in_df(df=test_df, variables=variable_dict)
 
         assert observed_df["test_binary"].dtype == "int64"
