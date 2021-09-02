@@ -1,6 +1,7 @@
 import pandas as pd
 import pytest
-from markupsafe import Markup
+import plotly.express as px
+from unittest import mock
 
 from cohortreport.series_report import series_graph, series_report
 
@@ -37,8 +38,14 @@ class TestSeriesGraph:
 
         assert observed_graph == ""
 
-    def test_chart(self):
+    @mock.patch("plotly.express.histogram")
+    def test_histogram_chart(self, mock):
         testing_col = pd.Series(list([0, 10] * 6), dtype="float64")
-        observed_graph = series_graph(testing_col)
+        series_graph(testing_col)
+        mock.assert_called_once()
 
-        assert type(observed_graph) == Markup
+    @mock.patch("plotly.express.bar")
+    def test_bar_chart(self, mock):
+        testing_col = pd.Series(list(["orange", "green"] * 6), dtype="category")
+        series_graph(testing_col)
+        mock.assert_called_once()
