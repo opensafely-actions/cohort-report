@@ -14,9 +14,9 @@ from cohortreport.errors import ImportActionError
 
 def suppress_low_numbers(series: pd.Series, limit: int = 6) -> pd.Series:
     """
-    This takes in a series and based on type of series, it suppresses
-    contents, and replaces with NaN if any count of any value is less
-    than the limit (default 5 or less).
+    This takes in a series and if any count of any one value is less than
+    the limit, it suppresses the whole series and replaces it with
+    NaN.
 
     Args:
         series: A dataframe column
