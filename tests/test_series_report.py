@@ -15,7 +15,7 @@ class TestSeriesReport:
         assert observed_report["mean"] == 5
 
     def test_small_number_suppression(self):
-        testing_col = pd.Series()  # empty series
+        testing_col = pd.Series(dtype="float64")  # empty series
         observed_report = series_report(testing_col)
 
         assert observed_report == "Suppressed due to low numbers"
@@ -33,7 +33,7 @@ class TestSeriesGraph:
             series_graph(testing_col)
 
     def test_small_number_suppression(self):
-        testing_col = pd.Series()  # empty series
+        testing_col = pd.Series(dtype="float64")  # empty series
         observed_graph = series_graph(testing_col)
 
         assert observed_graph == ""
