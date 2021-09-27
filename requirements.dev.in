@@ -1,6 +1,10 @@
+# To generate a requirements file, run:
+# pip-compile --generate-hashes --output-file=requirements.dev.txt requirements.dev.in
+
+# Although it would be better to read requirements.txt rather than requirements.in, we
+# can't because pip-compile can't resolve click.
 -r https://raw.githubusercontent.com/opensafely-core/python-docker/main/requirements.in
 
-# dev tools
 black
 bump2version
 flake8
@@ -9,4 +13,5 @@ flake8-implicit-str-concat
 isort
 mypy
 pytest
+pytest-cov
 types-setuptools

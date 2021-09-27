@@ -1,5 +1,6 @@
 from typing import Dict
 
+
 DEFAULTS = {"output_path": "cohort_reports_outputs/", "variable_types": None}
 
 
