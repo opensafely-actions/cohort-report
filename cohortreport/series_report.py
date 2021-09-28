@@ -60,8 +60,13 @@ def series_graph(series: pd.Series) -> Union[str, Markup]:
             image = Markup(fig.to_html(full_html=False, default_width="50%"))
             return image
         elif is_categorical_dtype(series.dtype):
-            data = series.value_counts()
-            fig = px.bar(data_frame=data)
+            data = series.value_counts().reset_index()
+            fig = px.bar(
+                data_frame=data,
+                x="index",
+                y=series.name,
+                labels={"index": series.name, series.name: "freq"},
+            )
             fig.update_xaxes(categoryorder="category ascending")
             image = Markup(fig.to_html(full_html=False, default_width="50%"))
             return image
