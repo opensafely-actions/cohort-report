@@ -4,6 +4,8 @@
 
 Cohort Report outputs graphs of variables in a study input file.
 
+![alt text](https://user-images.githubusercontent.com/477263/135131698-615d25b7-ba1b-419b-92d7-58bb9aa828a7.png)
+
 ## Usage
 
 Consider the following extract from a study's *project.yaml*:
