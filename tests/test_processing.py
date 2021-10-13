@@ -119,19 +119,13 @@ class TestTypeVariables:
 
 
 class TestBinaryToCategorical:
-    @staticmethod
-    def column_factory(num_of_repeated_rows, options):
-        expected_col = list(options * num_of_repeated_rows)
-        return pd.Series(expected_col, dtype="float64")
-
     def test_change_binary_to_categorical(self):
-        observed_series = processing.change_binary_to_categorical(
-            self.column_factory(5, options=[0, 1])
-        )
-        assert observed_series.dtype == "category"
+        assert processing.change_binary_to_categorical(pd.Series([0, 1])).dtype == "category"
 
-    def test_no_change_not_binary(self):
-        observed_series = processing.change_binary_to_categorical(
-            self.column_factory(5, options=[1, 5])
-        )
-        assert observed_series.dtype == "float64"
+    def test_does_not_change_floats_to_categorical(self):
+        assert processing.change_binary_to_categorical(pd.Series([0.0, 1.0])).dtype == "float64"
+
+    def test_does_not_change_numeric_to_categorical(self):
+        exp = pd.Series([1, 3])
+        obs = processing.change_binary_to_categorical(exp)
+        assert obs.equals(exp)
