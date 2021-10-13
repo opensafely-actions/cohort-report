@@ -37,30 +37,28 @@ class TestSuppressSmallNumbers:
         testing.assert_series_equal(obs, exp)
 
     def test_has_small_numbers_in_categories(self):
-        col = self.column_factory(
-            num_of_repeated_rows=5, options=["Yes", "No"], dtype="category"
-        )
+        col = self.column_factory(num_of_repeated_rows=5, options=["Yes", "No"], dtype="category")
         res = processing.suppress_low_numbers(col)
         testing.assert_series_equal(res, pd.Series(dtype="float64"))
 
     def test_has_no_small_numbers_in_categories(self):
-        exp = self.column_factory(
-            num_of_repeated_rows=7, options=["Yes", "No"], dtype="category"
-        )
+        exp = self.column_factory(num_of_repeated_rows=7, options=["Yes", "No"], dtype="category")
         obs = processing.suppress_low_numbers(exp)
         testing.assert_series_equal(obs, exp)
 
     def test_has_small_numbers_in_dates(self):
         dt1 = datetime.datetime(2021, 10, 12)
         dt2 = datetime.datetime(2021, 10, 11)
-        col = self.column_factory(num_of_repeated_rows=5, options=[dt1, dt2])
+        col = self.column_factory(num_of_repeated_rows=5,
+                                  options=[dt1, dt2])
         res = processing.suppress_low_numbers(col)
         testing.assert_series_equal(res, pd.Series(dtype="float64"))
 
     def test_has_no_small_numbers_in_dates(self):
         dt1 = datetime.datetime(2021, 10, 12)
         dt2 = datetime.datetime(2021, 10, 11)
-        exp = self.column_factory(num_of_repeated_rows=6, options=[dt1, dt2])
+        exp = self.column_factory(num_of_repeated_rows=6,
+                                  options=[dt1, dt2])
         obs = processing.suppress_low_numbers(exp)
         testing.assert_series_equal(obs, exp)
 
@@ -73,7 +71,6 @@ class TestSuppressSmallNumbers:
         col = self.column_factory(num_of_repeated_rows=6, options=["Yes", "No"])
         res = processing.suppress_low_numbers(col)
         testing.assert_series_equal(res, pd.Series(dtype="float64"))
-
 
 class TestLoadStudyCohort:
     @mock.patch("cohortreport.processing.pd.read_csv")
@@ -183,3 +180,5 @@ class TestBinaryToCategorical:
         exp = pd.Series([1, 3])
         obs = processing.change_binary_to_categorical(exp)
         assert obs.equals(exp)
+:wq
+qL
