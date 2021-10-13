@@ -180,5 +180,3 @@ class TestBinaryToCategorical:
         exp = pd.Series([1, 3])
         obs = processing.change_binary_to_categorical(exp)
         assert obs.equals(exp)
-:wq
-qL
