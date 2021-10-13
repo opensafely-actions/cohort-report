@@ -143,7 +143,7 @@ def change_binary_to_categorical(series: pd.Series) -> pd.Series:
     """
     # if the data is only ints of 0 or 1, it is a binary data type. this is
     # changed into category
-    if series.isin([0, 1]).all():
+    if series.apply(isinstance, args=[int]).all() and series.isin([0, 1]).all():
         series = series.astype("category")
 
     return series
