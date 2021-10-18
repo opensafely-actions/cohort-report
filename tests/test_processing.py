@@ -106,7 +106,7 @@ class TestTypeVariables:
             "test_categorical": "categorical",
             "test_int": "int",
             "test_date": "date",
-            "test_float": "float64",
+            "test_float": "float",
         }
         observed_df = processing.type_variables_in_df(
             df=test_df, variables=variable_dict
