@@ -11,12 +11,12 @@ from cohortreport.errors import ImportActionError
 
 
 class TestSuppressSmallNumbers:
-    def test_has_small_numbers_in_binary(self):
+    def test_has_small_numbers_in_int64_boolean(self):
         col = pd.Series(list([0, 1] * 5), dtype="int64")
         res = processing.suppress_low_numbers(col)
         assert res.empty
 
-    def test_has_no_small_numbers_in_binary(self):
+    def test_has_no_small_numbers_in_int64_boolean(self):
         exp = pd.Series(list([0, 1] * 6), dtype="int64")
         obs = processing.suppress_low_numbers(exp)
         testing.assert_series_equal(obs, exp)
