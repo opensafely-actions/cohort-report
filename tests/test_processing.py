@@ -164,8 +164,8 @@ class TestBinaryToCategorical:
             processing.change_binary_to_categorical(pd.Series([0, 1]))
         )
 
-    def test_does_not_change_floats_to_categorical(self):
-        assert is_float_dtype(
+    def test_change_floats_to_categorical(self):
+        assert is_categorical_dtype(
             processing.change_binary_to_categorical(pd.Series([0.0, 1.0]))
         )
 
