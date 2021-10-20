@@ -12,20 +12,59 @@ from cohortreport.errors import ImportActionError
 
 
 class TestSuppressSmallNumbers:
-    @staticmethod
-    def column_factory(num_of_repeated_rows):
-        expected_col = list([0, 1] * num_of_repeated_rows)
-        return pd.Series(expected_col, dtype="float64")
-
-    def test_has_small_numbers(self):
-        col = self.column_factory(num_of_repeated_rows=5)
+    def test_has_small_numbers_in_int64_boolean(self):
+        col = pd.Series(list([0, 1] * 5), dtype="int64")
         res = processing.suppress_low_numbers(col)
-        testing.assert_series_equal(res, pd.Series(dtype="float64"))
+        assert res.empty
 
-    def test_has_no_small_numbers(self):
-        exp = self.column_factory(num_of_repeated_rows=6)
+    def test_has_no_small_numbers_in_int64_boolean(self):
+        exp = pd.Series(list([0, 1] * 6), dtype="int64")
         obs = processing.suppress_low_numbers(exp)
         testing.assert_series_equal(obs, exp)
+
+    def test_has_small_numbers_in_int64(self):
+        col = pd.Series(list([1, 2] * 5), dtype="int64")
+        res = processing.suppress_low_numbers(col)
+        assert res.empty
+
+    def test_has_no_small_numbers_in_int64(self):
+        exp = pd.Series(list([1, 2] * 6), dtype="int64")
+        obs = processing.suppress_low_numbers(exp)
+        testing.assert_series_equal(obs, exp)
+
+    def test_has_small_numbers_in_category_dtype(self):
+        col = pd.Series(list(["Yes", "No"] * 5), dtype="category")
+        res = processing.suppress_low_numbers(col)
+        assert res.empty
+
+    def test_has_no_small_numbers_in_category_dtype(self):
+        exp = pd.Series(list(["Yes", "No"] * 6), dtype="category")
+        obs = processing.suppress_low_numbers(exp)
+        testing.assert_series_equal(obs, exp)
+
+    def test_has_small_numbers_in_datetime64_dtype(self):
+        dt1 = datetime.datetime(2021, 10, 12)
+        dt2 = datetime.datetime(2021, 10, 11)
+        col = pd.Series(list([dt1, dt2] * 5), dtype="datetime64[ns]")
+        res = processing.suppress_low_numbers(col)
+        assert res.empty
+
+    def test_has_no_small_number_in_datetime64_dtype(self):
+        dt1 = datetime.datetime(2021, 10, 12)
+        dt2 = datetime.datetime(2021, 10, 11)
+        exp = pd.Series(list([dt1, dt2] * 6), dtype="datetime64[ns]")
+        obs = processing.suppress_low_numbers(exp)
+        testing.assert_series_equal(obs, exp)
+
+    def test_objects_return_empty(self):
+        # Pandas can store any Python object incl. strings as Objects
+        # As default, we want to stop this in case an unexpected object such as
+        # another Data Object is passed through. This means that string
+        # categories (e.g. "Yes", and "No") need to be specified as categorical,
+        # and if they are not, they will be objects and these "objects" removed
+        col = pd.Series(list(["Yes", "No"] * 6))
+        res = processing.suppress_low_numbers(col)
+        assert res.empty
 
 
 class TestLoadStudyCohort:
@@ -106,7 +145,7 @@ class TestTypeVariables:
             "test_categorical": "categorical",
             "test_int": "int",
             "test_date": "date",
-            "test_float": "float64",
+            "test_float": "float",
         }
         observed_df = processing.type_variables_in_df(
             df=test_df, variables=variable_dict
