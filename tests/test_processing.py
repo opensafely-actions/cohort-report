@@ -5,7 +5,7 @@ from unittest import mock
 import pandas as pd
 import pytest
 from pandas import testing
-from pandas.api.types import is_categorical_dtype, is_float_dtype
+from pandas.api.types import is_categorical_dtype
 
 from cohortreport import processing
 from cohortreport.errors import ImportActionError
