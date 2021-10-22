@@ -15,9 +15,7 @@ from cohortreport.processing import (
 from cohortreport.series_report import series_graph, series_report
 
 
-def make_report(
-    path: Path, output_dir: str, input_file_name: str, variable_types: Union[Dict, None]
-) -> None:
+def make_report(path: Path, output_dir: str, variable_types: Union[Dict, None]) -> None:
     """
     Loads the data and create a graph per column.
 
@@ -26,7 +24,6 @@ def make_report(
             study definition creator tools (for example matching). This
             is a DataFrame, with patient_id as first column
         output_dir: Path to the output directory
-        input_file_name: name of the input file
         variable_types: Either none or a dict of the types of
         data in the column
             if not a typed input. For example, if plain csv.
@@ -44,12 +41,6 @@ def make_report(
         raise TypeError(
             f" The output directory was a {type(output_dir)}. "
             f"The path should be a str."
-        )
-
-    if not isinstance(input_file_name, str):
-        raise TypeError(
-            f" The input file name was a {type(input_file_name)}. "
-            f"The input file name (input_file_name) should be a str."
         )
 
     # validate that config passed matches with file type
@@ -92,9 +83,7 @@ def make_report(
     os.makedirs(output_dir, exist_ok=True)
 
     with open(
-        f"{output_dir}/descriptives_{input_file_name}.html", "w", encoding="utf-8"
+        f"{output_dir}/descriptives_{path.stem}.html", "w", encoding="utf-8"
     ) as f:
         f.write(html)
-        print(
-            f"Created cohort report at {output_dir}descriptives_{input_file_name}.html"
-        )
+        print(f"Created cohort report at {output_dir}descriptives_{path.stem}.html")

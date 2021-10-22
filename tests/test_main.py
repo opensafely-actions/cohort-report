@@ -14,6 +14,5 @@ def test_run_action(mocked):
     mocked.assert_called_once_with(
         path=pathlib.Path("output/input.csv"),
         output_dir="output",
-        input_file_name="input",
         variable_types=None,
     )

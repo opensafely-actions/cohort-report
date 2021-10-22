@@ -36,7 +36,6 @@ def test_make_report(path_to_input_csv):
     report.make_report(
         path_to_input_csv,
         str(path_to_output_dir),
-        path_to_input_csv.stem,
         {
             "sex": "categorical",
             "age_band": "categorical",
