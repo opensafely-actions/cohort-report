@@ -47,9 +47,12 @@ whole graph is redacted.
 
 Notice the `run` and `config` properties.
 
-The `run` property passes a specific input table to a specific version of cohortreport.
+The `run` property passes a specific input file to a specific version of cohortreport.
 In this case, the specific input file is *output/input.csv* and the specific version of cohortreport is v1.0.0.
 The `config` property passes configuration to cohortreport; for more information, see *Configuration*.
+
+Notice that the HTML document is called `descriptives_[the name of the specific input file, without the extension].html`.
+It is saved to the `output_path` (see below).
 
 ### Configuration
 
