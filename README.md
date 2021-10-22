@@ -42,8 +42,7 @@ actions:
 ```
 
 The `generate_report` action outputs one HTML document with a graph for each variable specified.
-Where graphs have a category of 5 or less, small number suppression is applied and the
-whole graph is redacted.
+Where graphs have a category of 5 or less, small number suppression is applied and the whole graph is redacted.
 
 Notice the `run` and `config` properties.
 
@@ -62,10 +61,9 @@ If the given path does not exist, then it is created.
 
 ---
 
-`variable_types` - this is an optional argument that should be used if the input files
-contain data without a type, for example, a CSV. `cohortreport` can take in other files
-such as '.feather' and '.dta' which contain the type of the data in each column. In these
-cases, a `variable_types` config if not needed.
+`variable_types` - this is an optional argument that should be used if the input files contain data without a type, for example, a CSV.
+`cohortreport` can take in other files such as '.feather' and '.dta' which contain the type of the data in each column.
+In these cases, a `variable_types` config if not needed.
 
 ## Developer docs
 
