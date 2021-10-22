@@ -4,7 +4,7 @@
 
 Cohort Report outputs graphs of variables in a study input file.
 
-![alt text](https://user-images.githubusercontent.com/477263/135131698-615d25b7-ba1b-419b-92d7-58bb9aa828a7.png)
+![Example output from Cohort Report](https://user-images.githubusercontent.com/477263/135131698-615d25b7-ba1b-419b-92d7-58bb9aa828a7.png)
 
 ## Usage
 
@@ -42,14 +42,16 @@ actions:
 ```
 
 The `generate_report` action outputs one HTML document with a graph for each variable specified.
-Where graphs have a category of 5 or less, small number suppression is applied and the 
-whole graph is redacted. 
+Where graphs have a category of 5 or less, small number suppression is applied and the whole graph is redacted.
 
 Notice the `run` and `config` properties.
 
-The `run` property passes a specific input table to a specific version of cohortreport.
+The `run` property passes a specific input file to a specific version of cohortreport.
 In this case, the specific input file is *output/input.csv* and the specific version of cohortreport is v1.0.0.
 The `config` property passes configuration to cohortreport; for more information, see *Configuration*.
+
+Notice that the HTML document is called `descriptives_[the name of the specific input file, without the extension].html`.
+It is saved to the `output_path` (see below).
 
 ### Configuration
 
@@ -59,10 +61,9 @@ If the given path does not exist, then it is created.
 
 ---
 
-`variable_types` - this is an optional argument that should be used if the input files
-contain data without a type, for example, a CSV. `cohortreport` can take in other files 
-such as '.feather' and '.dta' which contain the type of the data in each column. In these 
-cases, a `variable_types` config if not needed. 
+`variable_types` - this is an optional argument that should be used if the input files contain data without a type, for example, a CSV.
+`cohortreport` can take in other files such as '.feather' and '.dta' which contain the type of the data in each column.
+In these cases, a `variable_types` config if not needed.
 
 ## Developer docs
 
