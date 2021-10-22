@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import Dict, Union
+from typing import Dict, Optional
 
 import pkg_resources
 from jinja2 import Template
@@ -15,7 +15,11 @@ from cohortreport.processing import (
 from cohortreport.series_report import series_graph, series_report
 
 
-def make_report(path: Path, output_dir: str, variable_types: Union[Dict, None]) -> None:
+def make_report(
+    path: Path,
+    output_dir: str,
+    variable_types: Optional[Dict[str, str]],
+) -> None:
     """
     Loads the data and create a graph per column.
 
