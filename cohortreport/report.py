@@ -20,20 +20,14 @@ def make_report(
     output_dir: str,
     variable_types: Optional[Dict[str, str]],
 ) -> None:
-    """
-    Loads the data and create a graph per column.
+    """Makes a report for a cohort.
 
     Args:
-        path: Path to the cohort created, usually by cohortextractor, or by other
-            study definition creator tools (for example matching). This
-            is a DataFrame, with patient_id as first column
-        output_dir: Path to the output directory
-        variable_types: Either none or a dict of the types of
-        data in the column
-            if not a typed input. For example, if plain csv.
-
-    Returns:
-        None
+        path: a path to a file that contains a cohort; that is, a table with one row per
+            patient.
+        output_dir: a path to a directory where the report will be written.
+        variable_types: for CSV files, a mapping of column names to column types. For
+            other file types, this is optional (`None`).
     """
     if not isinstance(path, Path):
         raise TypeError(
