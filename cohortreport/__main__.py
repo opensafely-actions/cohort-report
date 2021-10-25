@@ -83,7 +83,10 @@ def main():
     args = parser.parse_args()
 
     # convert config path to config dict
-    config_dict = convert_config(args.config)
+    if args.config is not None:
+        config_dict = convert_config(args.config)
+    else:
+        config_dict = {}
     processed_config = load_config(config_dict)
 
     # run cohort report
