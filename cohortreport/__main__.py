@@ -1,7 +1,6 @@
 """ Command line tool for using cohort reporter """
 import argparse
 import json
-import os
 from pathlib import Path
 from typing import Dict, List
 
@@ -43,12 +42,9 @@ def run_action(input_files: List, config: Dict) -> None:
     """
 
     for input_file in input_files:
-        input_filename_with_ext = os.path.basename(input_file)
-        input_filename = os.path.splitext(input_filename_with_ext)[0]
         make_report(
             path=Path(input_file),
             output_dir=config["output_path"],
-            input_file_name=input_filename,
             variable_types=config["variable_types"],
         )
 
