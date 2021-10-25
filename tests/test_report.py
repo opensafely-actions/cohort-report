@@ -1,6 +1,6 @@
 import itertools
 
-import pandas
+import pandas as pd
 import pytest
 
 from cohortreport import report
@@ -17,7 +17,7 @@ def path_to_input_csv(tmp_path):
     sex = {"M", "F"}
     age_band = {"0", "16-29"}
     has_copd = {0, 1}
-    patient_records = pandas.DataFrame(
+    patient_records = pd.DataFrame(
         itertools.product(sex, age_band, has_copd),
         columns=("sex", "age_band", "has_copd"),
     )
