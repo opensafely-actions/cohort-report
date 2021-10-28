@@ -8,11 +8,14 @@ from jinja2 import Template
 from cohortreport.errors import ConfigAndFileMismatchError
 from cohortreport.processing import (
     change_binary_to_categorical,
+    group,
     load_study_cohort,
-    suppress_low_numbers,
+    plot,
+    redact,
+    save,
+    summarize,
     type_variables_in_df,
 )
-from cohortreport.series_report import series_graph, series_report
 
 
 def make_report(
@@ -62,23 +65,32 @@ def make_report(
     )
     template = Template(template_str.decode("utf8"))
 
+    os.makedirs(output_dir, exist_ok=True)
+
     # loops through the dataframe column by column and suppreses low
     # numbers, make a cohort report and then a graph
     reports = {}
     for name, series in df.iteritems():
         if name == "patient_id":
             continue
-        series = suppress_low_numbers(series)
+
         transformed_series = change_binary_to_categorical(series=series)
+
+        summarized_series = summarize(transformed_series)
+
+        grouped_series = group(transformed_series)
+        redacted_series = redact(grouped_series)
+        figure = plot(redacted_series)
+        path_to_figure = Path(output_dir) / f"{name}.png"
+        save(figure, path_to_figure)
+
         report_dict = {
-            "written_report": series_report(series=transformed_series),
-            "graph": series_graph(series=transformed_series),
+            "written_report": summarized_series,
+            "graph": str(path_to_figure),
         }
         reports[name] = report_dict
 
     html = template.render(reports=reports)
-
-    os.makedirs(output_dir, exist_ok=True)
 
     with open(
         f"{output_dir}/descriptives_{path.stem}.html", "w", encoding="utf-8"
