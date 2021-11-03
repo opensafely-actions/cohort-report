@@ -1,5 +1,3 @@
-import itertools
-
 import pandas as pd
 import pytest
 
@@ -14,12 +12,12 @@ def path_to_input_csv(tmp_path):
     definition. It exists within a subdirectory of the default base temporary directory,
     which you can override by passing `--basetemp=my_basetemp` to `pytest`.
     """
-    sex = {"M", "F"}
-    age_band = {"0", "16-29"}
-    has_copd = {0, 1}
     patient_records = pd.DataFrame(
-        itertools.product(sex, age_band, has_copd),
-        columns=("sex", "age_band", "has_copd"),
+        {
+            "sex": ["M", "F"] * 10,
+            "age_band": ["0", "16-29"] * 10,
+            "has_copd": [0, 1] * 10,
+        }
     )
     patient_records["patient_id"] = range(len(patient_records))
 
