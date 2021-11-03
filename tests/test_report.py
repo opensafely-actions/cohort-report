@@ -14,9 +14,9 @@ def path_to_input_csv(tmp_path):
     """
     patient_records = pd.DataFrame(
         {
-            "sex": ["M", "F"] * 10,
-            "age_band": ["0", "16-29"] * 10,
-            "has_copd": [0, 1] * 10,
+            "sex": ["M", "F"] * 50,
+            "bmi": range(100),
+            "has_copd": [0, 1] * 50,
         }
     )
     patient_records["patient_id"] = range(len(patient_records))
@@ -36,7 +36,7 @@ def test_make_report(path_to_input_csv):
         str(path_to_output_dir),
         {
             "sex": "categorical",
-            "age_band": "categorical",
+            "bmi": "float",
             "has_copd": "binary",
         },
     )
