@@ -15,5 +15,3 @@ mypy
 pytest
 pytest-cov
 types-setuptools
-
-plotly==4.5.0 # Issue #20 describes why we're pinning Plotly.
