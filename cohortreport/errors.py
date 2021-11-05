@@ -4,7 +4,3 @@ class ImportActionError(Exception):
 
 class ConfigAndFileMismatchError(Exception):
     pass
-
-
-class ColumnsDoNotMatch(Exception):
-    pass

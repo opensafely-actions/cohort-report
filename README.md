@@ -4,7 +4,7 @@
 
 Cohort Report outputs graphs of variables in a study input file.
 
-![Example output from Cohort Report](https://user-images.githubusercontent.com/477263/135131698-615d25b7-ba1b-419b-92d7-58bb9aa828a7.png)
+![Example output from Cohort Report](https://user-images.githubusercontent.com/477263/140117942-fbfde3fc-2ffc-41f9-b2d2-4128629cbb58.png)
 
 ## Usage
 
@@ -41,8 +41,12 @@ actions:
         reports: output/cohort_reports_outputs/descriptives_input.html
 ```
 
-The `generate_report` action outputs one HTML document with a graph for each variable specified.
-Where graphs have a category of 5 or less, small number suppression is applied and the whole graph is redacted.
+The `generate_report` action generates a report that contains a table and a chart for each variable in the input file.
+The table contains unsafe statistics and should be checked thoroughly before it is released.
+The chart contains statistics that have been made safe.
+Cells in the underlying frequency table have been redacted, if:
+* They contain less than 10 units
+* They contain greater than 90% of the total number of units
 
 Notice the `run` and `config` properties.
 

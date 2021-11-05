@@ -2,68 +2,15 @@ import datetime
 from pathlib import Path
 from unittest import mock
 
+import numpy as np
 import pandas as pd
 import pytest
+from matplotlib.axes import Axes
+from matplotlib.figure import Figure
 from pandas import testing
 
 from cohortreport import processing
 from cohortreport.errors import ImportActionError
-
-
-class TestSuppressSmallNumbers:
-    def test_has_small_numbers_in_int64_boolean(self):
-        col = pd.Series(list([0, 1] * 5), dtype="int64")
-        res = processing.suppress_low_numbers(col)
-        assert res.empty
-
-    def test_has_no_small_numbers_in_int64_boolean(self):
-        exp = pd.Series(list([0, 1] * 6), dtype="int64")
-        obs = processing.suppress_low_numbers(exp)
-        testing.assert_series_equal(obs, exp)
-
-    def test_has_small_numbers_in_int64(self):
-        col = pd.Series(list([1, 2] * 5), dtype="int64")
-        res = processing.suppress_low_numbers(col)
-        assert res.empty
-
-    def test_has_no_small_numbers_in_int64(self):
-        exp = pd.Series(list([1, 2] * 6), dtype="int64")
-        obs = processing.suppress_low_numbers(exp)
-        testing.assert_series_equal(obs, exp)
-
-    def test_has_small_numbers_in_category_dtype(self):
-        col = pd.Series(list(["Yes", "No"] * 5), dtype="category")
-        res = processing.suppress_low_numbers(col)
-        assert res.empty
-
-    def test_has_no_small_numbers_in_category_dtype(self):
-        exp = pd.Series(list(["Yes", "No"] * 6), dtype="category")
-        obs = processing.suppress_low_numbers(exp)
-        testing.assert_series_equal(obs, exp)
-
-    def test_has_small_numbers_in_datetime64_dtype(self):
-        dt1 = datetime.datetime(2021, 10, 12)
-        dt2 = datetime.datetime(2021, 10, 11)
-        col = pd.Series(list([dt1, dt2] * 5), dtype="datetime64[ns]")
-        res = processing.suppress_low_numbers(col)
-        assert res.empty
-
-    def test_has_no_small_number_in_datetime64_dtype(self):
-        dt1 = datetime.datetime(2021, 10, 12)
-        dt2 = datetime.datetime(2021, 10, 11)
-        exp = pd.Series(list([dt1, dt2] * 6), dtype="datetime64[ns]")
-        obs = processing.suppress_low_numbers(exp)
-        testing.assert_series_equal(obs, exp)
-
-    def test_objects_return_empty(self):
-        # Pandas can store any Python object incl. strings as Objects
-        # As default, we want to stop this in case an unexpected object such as
-        # another Data Object is passed through. This means that string
-        # categories (e.g. "Yes", and "No") need to be specified as categorical,
-        # and if they are not, they will be objects and these "objects" removed
-        col = pd.Series(list(["Yes", "No"] * 6))
-        res = processing.suppress_low_numbers(col)
-        assert res.empty
 
 
 class TestLoadStudyCohort:
@@ -155,3 +102,232 @@ class TestTypeVariables:
         assert observed_df["test_int"].dtype == "int64"
         assert observed_df["test_date"].dtype == "category"
         assert observed_df["test_float"].dtype == "float64"
+
+
+class TestIsDiscrete:
+    def test_with_discrete(self):
+        assert processing.is_discrete(pd.Series(dtype=bool))
+        assert processing.is_discrete(pd.Series(dtype="boolean"))
+        assert processing.is_discrete(pd.Series(dtype="category"))
+        assert processing.is_discrete(pd.Series(dtype="datetime64[ns]"))
+        assert processing.is_discrete(pd.Series(dtype="datetime64[ns, UTC]"))
+
+    def test_with_not_discrete(self):
+        assert not processing.is_discrete(pd.Series(dtype=float))
+        assert not processing.is_discrete(pd.Series(dtype=int))
+
+
+class TestIsContinuous:
+    def test_with_continuous(self):
+        assert processing.is_continuous(pd.Series(dtype=float))
+        assert processing.is_continuous(pd.Series(dtype=int))
+
+    def test_with_not_continuous(self):
+        assert not processing.is_continuous(pd.Series(dtype=bool))
+        assert not processing.is_continuous(pd.Series(dtype="boolean"))
+        assert not processing.is_continuous(pd.Series(dtype="category"))
+        assert not processing.is_continuous(pd.Series(dtype="datetime64[ns]"))
+        assert not processing.is_continuous(pd.Series(dtype="datetime64[ns, UTC]"))
+
+
+def test_summarize():
+    # `summarize` is a thin wrapper around `Series.describe`. However, the
+    # latter accepts arguments that we shouldn't pass without also making
+    # changes to the docstring and to the cohort report itself (i.e. the HTML
+    # file). Consequently, we mock the `Series` that we pass to `summarize` and
+    # test that `Series.describe` was called without arguments.
+    series = mock.MagicMock(spec_set=pd.Series)
+
+    processing.summarize(series)
+
+    series.describe.assert_called_once_with()
+
+
+class TestGroup:
+    def test_with_object(self):
+        # handling an object series is undefined
+        with pytest.raises(AssertionError):
+            processing.group(pd.Series(dtype=object))
+
+    def test_with_bool(self):
+        obs = processing._group_discrete(
+            pd.Series(
+                [False],
+                dtype=bool,
+                name="has_condition",
+            )
+        )
+
+        exp = pd.Series([1], index=[False], dtype=int, name="has_condition")
+        testing.assert_series_equal(obs, exp)
+
+    def test_with_float(self):
+        obs = processing._group_continuous(pd.Series([1.0], dtype=float, name="bmi"))
+
+        exp = pd.Series(
+            [1],
+            index=pd.IntervalIndex.from_tuples([(0.5, 1.5)]),
+            dtype=int,
+            name="bmi",
+        )
+        testing.assert_series_equal(obs, exp)
+
+
+def test_group_discrete_with_float():
+    with pytest.raises(TypeError):
+        processing._group_discrete(pd.Series(dtype=float))
+
+
+def test_group_continuous_with_bool():
+    with pytest.raises(TypeError):
+        processing._group_continuous(pd.Series(dtype=bool))
+
+
+def test_redact():
+    frequency_table = pd.Series(
+        index=["0", "16-29", "30-39"],
+        data=[
+            10,  # does not fail either heuristic
+            9,  # fails the "less than this number" heuristic
+            172,  # fails the "greater than this percentage" heuristic
+        ],
+        dtype="int",
+        name="age_band",
+    )
+
+    obs = processing.redact(frequency_table)
+
+    exp = pd.Series(
+        index=["0", "16-29", "30-39"],
+        data=[
+            10,  # not redacted
+            np.nan,  # redacted
+            np.nan,  # redacted
+        ],
+        dtype=float,  # cast from int to float because of np.nan
+        name="age_band",
+    )
+    testing.assert_series_equal(obs, exp)
+
+
+def test_get_unit_mask():
+    # a frequency table with a count of 1 for False and a count of 19 for True
+    frequency_table = pd.Series(
+        index=[False, True],
+        data=[1, 19],
+        dtype="int",
+        name="has_condition",
+    )
+
+    # cells that contain less than 10 units should be redacted
+    obs_unit_mask = processing._get_unit_mask(frequency_table, 10)
+
+    # We expect False to be redacted (i.e. the mask to have the value True), because it
+    # has a count of 1. We expect True not to be redacted (i.e. the mask to have the
+    # value False, because it has a count of 19.
+    exp_unit_mask = pd.Series(
+        index=[False, True],
+        data=[True, False],
+        dtype=bool,
+        name="has_condition",
+    )
+    testing.assert_series_equal(obs_unit_mask, exp_unit_mask)
+
+
+def test_get_unit_distribution_mask():
+    # a frequency table with a count of 1 for False and a count of 19 for True
+    frequency_table = pd.Series(
+        index=[False, True],
+        data=[1, 19],
+        dtype="int",
+        name="has_condition",
+    )
+
+    # cells that contain greater than 90% of the total number of units should be
+    # redacted
+    obs_unit_dist_mask = processing._get_unit_distribution_mask(frequency_table, 0.9)
+
+    # We expect False not to be redacted (i.e. the mask to have the value False),
+    # because it does not have greater than 90% of the total number of units. We expect
+    # True to be redacted (i.e. to mask to have the value True), because it has greater
+    # than 90% of the total number of units.
+    exp_unit_dist_mask = pd.Series(
+        index=[False, True],
+        data=[False, True],
+        dtype=bool,
+        name="has_condition",
+    )
+    testing.assert_series_equal(obs_unit_dist_mask, exp_unit_dist_mask)
+
+
+def test_series_with_interval_index_to_histogram():
+    obs_hist, obs_bin_edges = processing._series_with_interval_index_to_histogram(
+        pd.Series(
+            [1],
+            pd.IntervalIndex.from_tuples([(0.5, 1.5)]),
+            dtype=int,
+            name="bmi",
+        )
+    )
+
+    exp_hist = np.array([1])
+    exp_bin_edges = np.array([0.5, 1.5], dtype=float)
+    assert np.array_equal(obs_hist, exp_hist)
+    assert np.array_equal(obs_bin_edges, exp_bin_edges)
+
+
+class TestPlotHist:
+    def test_has_title(self):
+        # Test the function's behaviour; did it return what we expected it to return?
+        obs_fig = processing.plot(
+            pd.Series(
+                [1],
+                pd.IntervalIndex.from_tuples([(0.5, 1.5)]),
+                dtype=int,
+                name="bmi",
+            )
+        )
+
+        assert obs_fig.axes[0].get_title() == "bmi"
+
+    @mock.patch("cohortreport.processing.plt.subplots")
+    def test_is_histogram(self, mocked_subplots):
+        # Test the function's implementation
+        mocked_fig = mock.MagicMock(spec_set=Figure)
+        mocked_ax = mock.MagicMock(spec_set=Axes)
+        mocked_subplots.return_value = mocked_fig, mocked_ax
+
+        processing.plot(
+            pd.Series(
+                [1],
+                pd.IntervalIndex.from_tuples([(0.5, 1.5)]),
+                dtype=int,
+                name="bmi",
+            )
+        )
+
+        mocked_ax.hist.assert_called_once()
+
+
+class TestPlotBarh:
+    def test_has_title(self):
+        # Test the function's behaviour; did it return what we expected it to return?
+        obs_fig = processing.plot(
+            pd.Series(
+                [1],
+                index=[False],
+                dtype=int,
+                name="has_condition",
+            )
+        )
+
+        assert obs_fig.axes[0].get_title() == "has_condition"
+
+    def test_is_barh(self):
+        # Test the function's implementation
+        mocked_series = mock.MagicMock(spec_set=pd.Series)
+        mocked_series.name = "has_condition"
+
+        processing.plot(mocked_series)
+
+        mocked_series.plot.barh.assert_called_once_with(title="has_condition")

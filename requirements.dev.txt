@@ -1143,12 +1143,10 @@ pip-tools==6.2.0 \
     --hash=sha256:77727ef7457d1865e61fe34c2b1439f9b971b570cc232616a22ce82ab89d357d \
     --hash=sha256:9ed38c73da4993e531694ea151f77048b4dbf2ba7b94c4a569daa39568cc6564
     # via -r https://raw.githubusercontent.com/opensafely-core/python-docker/main/requirements.in
-plotly==4.5.0 \
-    --hash=sha256:a19ed783bcf094e6207b3699ab261465bf3c7d299403678801de634bf17e2559 \
-    --hash=sha256:bb5271f648913cf330a0de4ede3084cda848f8ad8b080330a0678e1b21df97b0
-    # via
-    #   -r https://raw.githubusercontent.com/opensafely-core/python-docker/main/requirements.in
-    #   -r requirements.dev.in
+plotly==5.2.1 \
+    --hash=sha256:1575c34f87313818fc109a3d3326f2b91363d049c1e80cbf68561c8df24fb47c \
+    --hash=sha256:bf7c8123541a2c6579c309561a8e1058c129434c67419651efbdc4922b11da8f
+    # via -r https://raw.githubusercontent.com/opensafely-core/python-docker/main/requirements.in
 pluggy==0.13.1 \
     --hash=sha256:15b2acde666561e1298d71b523007ed7364de07029219b604cf808bfa1c765b0 \
     --hash=sha256:966c145cd83c96502c3c3868f50408687b38434af77734af1e9ca461a4081d2d
@@ -1518,9 +1516,6 @@ retry==0.9.2 \
     --hash=sha256:ccddf89761fa2c726ab29391837d4327f819ea14d244c232a1d24c67a2f98606 \
     --hash=sha256:f8bfa8b99b69c4506d6f5bd3b0aabf77f98cdb17f3c9fc3f5ca820033336fba4
     # via opensafely-cohort-extractor
-retrying==1.3.3 \
-    --hash=sha256:08c039560a6da2fe4f2c426d0766e284d3b736e355f8dd24b37367b0bb41973b
-    # via plotly
 rsa==4.7.2 \
     --hash=sha256:78f9a9bf4e7be0c5ded4583326e7461e3a3c5aae24073648b4bdfa797d78c9d2 \
     --hash=sha256:9d689e6ca1b3038bc82bf8d23e944b6b6037bc02301a574935b2dd946e0353b9
@@ -1639,7 +1634,6 @@ six==1.16.0 \
     #   protobuf
     #   pyopenssl
     #   python-dateutil
-    #   retrying
 sniffio==1.2.0 \
     --hash=sha256:471b71698eac1c2112a40ce2752bb2f4a4814c22a54a3eed3676bc0f5ca9f663 \
     --hash=sha256:c4666eecec1d3f50960c6bdf61ab7bc350648da6c126e3cf6898d8cd4ddcd3de
@@ -1711,6 +1705,10 @@ tabulate==0.8.9 \
     --hash=sha256:d7c013fe7abbc5e491394e10fa845f8f32fe54f8dc60c6622c6cf482d25d47e4 \
     --hash=sha256:eb1d13f25760052e8931f2ef80aaf6045a6cceb47514db8beab24cded16f13a7
     # via opensafely-cohort-extractor
+tenacity==8.0.1 \
+    --hash=sha256:43242a20e3e73291a28bcbcacfd6e000b02d3857a9a9fff56b297a27afdc932f \
+    --hash=sha256:f78f4ea81b0fabc06728c11dc2a8c01277bfc5181b321a4770471902e3eb844a
+    # via plotly
 terminado==0.11.1 \
     --hash=sha256:962b402edbb480718054dc37027bada293972ecadfb587b89f01e2b8660a2132 \
     --hash=sha256:9e0457334863be3e6060c487ad60e0995fa1df54f109c67b24ff49a4f2f34df5
