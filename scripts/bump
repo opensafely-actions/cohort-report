@@ -1,10 +1,8 @@
 #!/bin/bash
-# Bumps the version string in cohortreport/VERSION, creating a annotated tag for the new
-# version and a commit for cohortreport/VERSION.
+# Bumps the version string to the next major, minor, or patch version.
 
 set -euo pipefail
 
-current_version="`cat cohortreport/VERSION`"
 version_type="$1"
 
-$VIRTUAL_ENV/bin/bump2version --current-version $current_version --tag --commit $version_type cohortreport/VERSION
+$VIRTUAL_ENV/bin/bump2version $version_type
