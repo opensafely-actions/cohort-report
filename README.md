@@ -20,7 +20,7 @@ actions:
         cohort: output/input.csv
 
   generate_report:
-    run: cohort-report:v2.0.2 output/input.csv
+    run: cohort-report:v2.1.0 output/input.csv
     needs: [generate_study_population]
     config:
       variable_types:
