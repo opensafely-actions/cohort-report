@@ -6,7 +6,6 @@
 -r https://raw.githubusercontent.com/opensafely-core/python-docker/main/requirements.in
 
 black
-bump2version
 flake8
 flake8-builtins
 flake8-implicit-str-concat
