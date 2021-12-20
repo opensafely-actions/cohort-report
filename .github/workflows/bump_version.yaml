@@ -41,7 +41,7 @@ jobs:
       - name: Bump instances of old version to new version
         run: |
           echo ${{ needs.determine-new-version.outputs.new_version }} > cohortreport/VERSION
-          sed -i 's/[0-9]*\.[0-9]*\.[0-9]*/${{ needs.determine-new-version.outputs.new_version }}/g' README.md
+          sed -i -E 's/[0-9]+?\.[0-9]+?\.[0-9]+?/${{ needs.determine-new-version.outputs.new_version }}/g' README.md
       - name: Commit and tag
         run: |
           git config user.name github-actions
