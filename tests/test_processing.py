@@ -263,15 +263,15 @@ def test_get_unit_distribution_mask():
 def test_series_with_interval_index_to_histogram():
     obs_hist, obs_bin_edges = processing._series_with_interval_index_to_histogram(
         pd.Series(
-            [1],
-            pd.IntervalIndex.from_tuples([(0.5, 1.5)]),
+            [1, 2, 3],
+            pd.IntervalIndex.from_tuples([(0.5, 1.5), (1.5, 2.5), (2.5, 3.5)]),
             dtype=int,
             name="bmi",
         )
     )
 
-    exp_hist = np.array([1])
-    exp_bin_edges = np.array([0.5, 1.5], dtype=float)
+    exp_hist = np.array([1, 2, 3])
+    exp_bin_edges = np.array([0.5, 1.5, 2.5, 3.5], dtype=float)
     assert np.array_equal(obs_hist, exp_hist)
     assert np.array_equal(obs_bin_edges, exp_bin_edges)
 
