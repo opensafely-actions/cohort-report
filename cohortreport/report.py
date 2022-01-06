@@ -86,7 +86,7 @@ def make_report(
 
         report_dict = {
             "written_report": summarized_series,
-            "graph": str(path_to_figure),
+            "graph": str(path_to_figure.name),
         }
         reports[name] = report_dict
 
