@@ -1,7 +1,18 @@
+import errno
 import pathlib
 from unittest import mock
 
+import pytest
+
 from cohortreport import __main__
+
+
+def test_convert_config_with_long_string():
+    # It doesn't have to be a long JSON string; just a long string.
+    long_string = "_" * 500
+    with pytest.raises(OSError) as e:
+        __main__.convert_config(long_string)
+    assert e.value.errno == errno.ENAMETOOLONG
 
 
 @mock.patch("cohortreport.__main__.make_report")
