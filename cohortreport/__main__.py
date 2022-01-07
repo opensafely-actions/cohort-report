@@ -9,28 +9,6 @@ from cohortreport.report import make_report
 from cohortreport.utils import load_config
 
 
-def convert_config(file_or_string: str) -> Dict:
-    """
-    Takes in a JSON string or a path to a JSON file and outputs
-    the config as Python object such as a dict
-    Args:
-        file_or_string:
-    Returns:
-        Configuration as loaded JSON
-    """
-    path = Path(file_or_string)
-    try:
-        if path.exists():
-            with path.open() as f:
-                config = json.load(f)
-        else:
-            config = json.loads(file_or_string)
-    except json.JSONDecodeError as exc:
-        raise argparse.ArgumentTypeError(f"Could not parse {file_or_string}\n{exc}")
-
-    return config
-
-
 def run_action(input_files: List, config: Dict) -> None:
     """
     Takes each input file in turn and creates the HTML graphs for each
@@ -61,8 +39,7 @@ def main():
 
     # configurations
     parser.add_argument(
-        "--config",
-        help="Configuration as either a JSON str or a path to a JSON file",
+        "--config", type=json.loads, help="A JSON string that contains configuration"
     )
 
     # version
@@ -78,12 +55,7 @@ def main():
     # parse args
     args = parser.parse_args()
 
-    # convert config path to config dict
-    if args.config is not None:
-        config_dict = convert_config(args.config)
-    else:
-        config_dict = {}
-    processed_config = load_config(config_dict)
+    processed_config = load_config(args.config if args.config is not None else {})
 
     # run cohort report
     run_action(input_files=args.input_files, config=processed_config)
