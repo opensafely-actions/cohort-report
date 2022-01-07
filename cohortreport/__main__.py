@@ -1,6 +1,7 @@
 """ Command line tool for using cohort reporter """
 import argparse
 import json
+import sys
 from pathlib import Path
 from typing import Dict, List
 
@@ -27,11 +28,7 @@ def run_action(input_files: List, config: Dict) -> None:
         )
 
 
-def main():
-    """
-    Command line tool for running cohort report.
-    """
-
+def parse_args(args):
     # make args parser
     parser = argparse.ArgumentParser(
         description="Outputs variable report and graphs from cohort"
@@ -53,7 +50,14 @@ def main():
     )
 
     # parse args
-    args = parser.parse_args()
+    return parser.parse_args(args)
+
+
+def main():
+    """
+    Command line tool for running cohort report.
+    """
+    args = parse_args(sys.argv[1:])
 
     processed_config = load_config(args.config if args.config is not None else {})
 
