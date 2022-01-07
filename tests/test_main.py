@@ -1,32 +1,24 @@
 import json
 import pathlib
-import sys
 from unittest import mock
 
 from cohortreport import __main__
 
 
-@mock.patch("cohortreport.__main__.run_action")
-class TestMain:
-    def test_with_config(self, mocked):
+class TestParseArgs:
+    def test_with_config(self):
         config = {"output_path": "output", "variable_types": {}}
         input_files = ["output/input.csv"]
+        test_args = ["--config", json.dumps(config)] + input_files
+        args = __main__.parse_args(test_args)
+        assert args.config == config
+        assert args.input_files == input_files
 
-        test_args = ["", "--config", json.dumps(config)] + input_files
-        with mock.patch.object(sys, "argv", test_args):
-            __main__.main()
-
-        mocked.assert_called_once_with(input_files=input_files, config=config)
-
-    def test_without_config(self, mocked):
-        with mock.patch.object(sys, "argv", ["", "output/input.feather"]):
-            __main__.main()
-
-        mocked.assert_called_once_with(
-            input_files=["output/input.feather"],
-            # Default config
-            config={"output_path": "cohort_reports_outputs/", "variable_types": None},
-        )
+    def test_without_config(self):
+        input_files = ["output/input.csv"]
+        args = __main__.parse_args(input_files)
+        assert args.config is None
+        assert args.input_files == input_files
 
 
 @mock.patch("cohortreport.__main__.make_report")
