@@ -29,34 +29,20 @@ def run_action(input_files: List, config: Dict) -> None:
 
 
 def parse_args(args):
-    # make args parser
     parser = argparse.ArgumentParser(
-        description="Outputs variable report and graphs from cohort"
+        description="Cohort Report outputs graphs of variables in a study input file"
     )
-
-    # configurations
     parser.add_argument(
         "--config", type=json.loads, help="A JSON string that contains configuration"
     )
-
-    # version
     parser.add_argument(
         "--version", action="version", version=f"cohortreport {__version__}"
     )
-
-    # input files
-    parser.add_argument(
-        "input_files", nargs="*", help="Files that cohort report will be run on"
-    )
-
-    # parse args
+    parser.add_argument("input_files", nargs="*", help="Study input files")
     return parser.parse_args(args)
 
 
 def main():
-    """
-    Command line tool for running cohort report.
-    """
     args = parse_args(sys.argv[1:])
 
     processed_config = load_config(args.config if args.config is not None else {})
