@@ -1,7 +1,9 @@
+import pathlib
+
 import pandas as pd
 import pytest
 
-from cohortreport import report
+from cohortreport import errors, report
 
 
 @pytest.fixture
@@ -41,3 +43,9 @@ def test_make_report(path_to_input_csv):
         },
     )
     assert (path_to_output_dir / f"descriptives_{path_to_input_csv.stem}.html").exists()
+
+
+@pytest.mark.parametrize(["ext"], [(".csv",), (".csv.gz",)])
+def test_make_report_with_csv_file_but_without_variable_types(ext):
+    with pytest.raises(errors.ConfigAndFileMismatchError):
+        report.make_report(pathlib.Path(f"output/input{ext}"), "output", None)
