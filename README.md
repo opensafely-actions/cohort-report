@@ -65,9 +65,15 @@ If the given path does not exist, then it is created.
 
 ---
 
-`variable_types` - this is an optional argument that should be used if the input files contain data without a type, for example, a CSV.
-cohort-report can take in other files such as '.feather' and '.dta' which contain the type of the data in each column.
-In these cases, a `variable_types` config if not needed.
+`variable_types`, which is required for `.csv` and `.csv.gz` input files.
+Cast the given variables to the given types.
+Supported types:
+
+* `binary`
+* `categorical`
+* `date`
+* `float`
+* `int`
 
 ## Developer docs
 
