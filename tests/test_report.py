@@ -1,3 +1,5 @@
+import re
+
 import pandas as pd
 import pytest
 
@@ -40,4 +42,10 @@ def test_make_report(path_to_input_csv):
             "has_copd": "binary",
         },
     )
-    assert (path_to_output_dir / f"descriptives_{path_to_input_csv.stem}.html").exists()
+    path_to_output_html = (
+        path_to_output_dir / f"descriptives_{path_to_input_csv.stem}.html"
+    )
+    assert path_to_output_html.exists()
+    output_html = path_to_output_html.read_text()
+    src_attrs = re.findall(r'src="([\w\.]+)"', output_html)
+    assert src_attrs == ["sex.png", "bmi.png", "has_copd.png"]
