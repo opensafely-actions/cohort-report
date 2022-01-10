@@ -48,8 +48,7 @@ def make_report(
     ext = "".join(path.suffixes)
     if (ext == ".csv" or ext == ".csv.gz") and variable_types is None:
         raise ConfigAndFileMismatchError(
-            f"You have loaded a file type - {ext} that expects "
-            f"a variables_types config to be passed in."
+            f"If you pass a {ext} file, then you must also pass `variable_types`"
         )
 
     # loads data into dataframe
