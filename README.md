@@ -2,7 +2,7 @@
 
 ## Summary
 
-Cohort-report outputs graphs of variables in a study input file.
+Cohort-report generates a report for each variable in an input file.
 
 ![Example output from Cohort Report](https://user-images.githubusercontent.com/477263/140117942-fbfde3fc-2ffc-41f9-b2d2-4128629cbb58.png)
 
