@@ -1,34 +1,13 @@
 """ Command line tool for using cohort reporter """
 import argparse
 import json
+import sys
 from pathlib import Path
 from typing import Dict, List
 
 from cohortreport import __version__
 from cohortreport.report import make_report
 from cohortreport.utils import load_config
-
-
-def convert_config(file_or_string: str) -> Dict:
-    """
-    Takes in a JSON string or a path to a JSON file and outputs
-    the config as Python object such as a dict
-    Args:
-        file_or_string:
-    Returns:
-        Configuration as loaded JSON
-    """
-    path = Path(file_or_string)
-    try:
-        if path.exists():
-            with path.open() as f:
-                config = json.load(f)
-        else:
-            config = json.loads(file_or_string)
-    except json.JSONDecodeError as exc:
-        raise argparse.ArgumentTypeError(f"Could not parse {file_or_string}\n{exc}")
-
-    return config
 
 
 def run_action(input_files: List, config: Dict) -> None:
@@ -49,41 +28,24 @@ def run_action(input_files: List, config: Dict) -> None:
         )
 
 
-def main():
-    """
-    Command line tool for running cohort report.
-    """
-
-    # make args parser
+def parse_args(args):
     parser = argparse.ArgumentParser(
-        description="Outputs variable report and graphs from cohort"
+        description="Cohort Report outputs graphs of variables in a study input file"
     )
-
-    # configurations
     parser.add_argument(
-        "--config",
-        help="Configuration as either a JSON str or a path to a JSON file",
+        "--config", type=json.loads, help="A JSON string that contains configuration"
     )
-
-    # version
     parser.add_argument(
         "--version", action="version", version=f"cohortreport {__version__}"
     )
+    parser.add_argument("input_files", nargs="*", help="Study input files")
+    return parser.parse_args(args)
 
-    # input files
-    parser.add_argument(
-        "input_files", nargs="*", help="Files that cohort report will be run on"
-    )
 
-    # parse args
-    args = parser.parse_args()
+def main():
+    args = parse_args(sys.argv[1:])
 
-    # convert config path to config dict
-    if args.config is not None:
-        config_dict = convert_config(args.config)
-    else:
-        config_dict = {}
-    processed_config = load_config(config_dict)
+    processed_config = load_config(args.config if args.config is not None else {})
 
     # run cohort report
     run_action(input_files=args.input_files, config=processed_config)
