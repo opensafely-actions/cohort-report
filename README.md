@@ -55,7 +55,7 @@ In this case, it passes *output/input.csv* to v2.1.0 of cohort-report.
 The `config` property passes configuration to cohort-report; for more information, see *Configuration*.
 
 Notice that the report is called `descriptives_[the name of the input file, without the extension].html`.
-It is saved to the `output_path` (see below).
+It is saved to the `output_path`; for more information, see *Configuration*.
 
 ### Configuration
 
