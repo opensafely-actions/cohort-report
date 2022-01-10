@@ -45,8 +45,8 @@ def make_report(
         )
 
     # validate that config passed matches with file type
-    ext = path.suffix
-    if ext == ".csv" or ext == ".csv.gz":
+    ext = path.suffixes
+    if ext == [".csv"] or ext == [".csv", ".gz"]:
         if variable_types is None:
             raise ConfigAndFileMismatchError(
                 f"You have loaded a file type - {ext} that expects "
