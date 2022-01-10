@@ -1,8 +1,8 @@
-# Cohort Report
+# Cohort-report
 
 ## Summary
 
-Cohort Report outputs graphs of variables in a study input file.
+Cohort-report outputs graphs of variables in a study input file.
 
 ![Example output from Cohort Report](https://user-images.githubusercontent.com/477263/140117942-fbfde3fc-2ffc-41f9-b2d2-4128629cbb58.png)
 
@@ -50,9 +50,9 @@ Cells in the underlying frequency table have been redacted, if:
 
 Notice the `run` and `config` properties.
 
-The `run` property passes a specific input file to a specific version of cohortreport.
-In this case, the specific input file is *output/input.csv* and the specific version of cohortreport is v1.0.0.
-The `config` property passes configuration to cohortreport; for more information, see *Configuration*.
+The `run` property passes a specific input file to a specific version of cohort-report.
+In this case, the specific input file is *output/input.csv* and the specific version of cohort-report is v1.0.0.
+The `config` property passes configuration to cohort-report; for more information, see *Configuration*.
 
 Notice that the HTML document is called `descriptives_[the name of the specific input file, without the extension].html`.
 It is saved to the `output_path` (see below).
@@ -66,7 +66,7 @@ If the given path does not exist, then it is created.
 ---
 
 `variable_types` - this is an optional argument that should be used if the input files contain data without a type, for example, a CSV.
-`cohortreport` can take in other files such as '.feather' and '.dta' which contain the type of the data in each column.
+cohort-report can take in other files such as '.feather' and '.dta' which contain the type of the data in each column.
 In these cases, a `variable_types` config if not needed.
 
 ## Developer docs
