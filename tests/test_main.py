@@ -1,5 +1,4 @@
 import json
-import pathlib
 import re
 import sys
 from unittest import mock
@@ -71,17 +70,3 @@ def test_main(path_to_input_csv):
     output_html = path_to_output_html.read_text()
     src_attrs = re.findall(r'src="([\w\.]+)"', output_html)
     assert src_attrs == ["sex.png", "bmi.png", "has_copd.png"]
-
-
-@mock.patch("cohortreport.__main__.make_report")
-def test_run_action(mocked):
-    __main__.run_action(
-        ["output/input.csv"],
-        {"output_path": "output", "variable_types": None},
-    )
-
-    mocked.assert_called_once_with(
-        path=pathlib.Path("output/input.csv"),
-        output_dir="output",
-        variable_types=None,
-    )
