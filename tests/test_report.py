@@ -1,9 +1,10 @@
+import pathlib
 import re
 
 import pandas as pd
 import pytest
 
-from cohortreport import report
+from cohortreport import errors, report
 
 
 @pytest.fixture
@@ -49,3 +50,9 @@ def test_make_report(path_to_input_csv):
     output_html = path_to_output_html.read_text()
     src_attrs = re.findall(r'src="([\w\.]+)"', output_html)
     assert src_attrs == ["sex.png", "bmi.png", "has_copd.png"]
+
+
+@pytest.mark.parametrize(["ext"], [(".csv",), (".csv.gz",)])
+def test_make_report_with_csv_file_but_without_variable_types(ext):
+    with pytest.raises(errors.ConfigAndFileMismatchError):
+        report.make_report(pathlib.Path(f"output/input{ext}"), "output", None)
