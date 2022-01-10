@@ -32,19 +32,6 @@ def make_report(
         variable_types: for CSV files, a mapping of column names to column types. For
             other file types, this is optional (`None`).
     """
-    if not isinstance(path, Path):
-        raise TypeError(
-            f" The path to the study population was a {type(path)}. "
-            f"The path should be a Path."
-        )
-
-    if not isinstance(output_dir, str):
-        raise TypeError(
-            f" The output directory was a {type(output_dir)}. "
-            f"The path should be a str."
-        )
-
-    # validate that config passed matches with file type
     ext = "".join(path.suffixes)
     if (ext == ".csv" or ext == ".csv.gz") and variable_types is None:
         raise ConfigAndFileMismatchError(
