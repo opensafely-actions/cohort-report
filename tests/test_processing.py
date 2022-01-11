@@ -85,22 +85,19 @@ def input_dataframe():
 
 class TestTypeVariables:
     def test_type_variable_match(self, input_dataframe):
-        variable_dict = {
+        variable_types = {
             "test_binary": "binary",
             "test_categorical": "categorical",
             "test_int": "int",
             "test_date": "date",
             "test_float": "float",
         }
-        observed_df = processing.type_variables_in_df(
-            df=input_dataframe, variables=variable_dict
-        )
-
-        assert observed_df["test_binary"].dtype == "int64"
-        assert observed_df["test_categorical"].dtype == "category"
-        assert observed_df["test_int"].dtype == "int64"
-        assert observed_df["test_date"].dtype == "category"
-        assert observed_df["test_float"].dtype == "float64"
+        typed_df = processing.type_variables_in_df(input_dataframe, variable_types)
+        assert typed_df["test_binary"].dtype == "int64"
+        assert typed_df["test_categorical"].dtype == "category"
+        assert typed_df["test_int"].dtype == "int64"
+        assert typed_df["test_date"].dtype == "category"
+        assert typed_df["test_float"].dtype == "float64"
 
 
 class TestIsDiscrete:
