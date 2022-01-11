@@ -78,7 +78,8 @@ def input_dataframe():
             "test_int": [56, 65],
             "test_date": [datetime.date(2021, 8, 31), datetime.date(2021, 8, 31)],
             "test_float": [1.2, 5.4],
-        }
+        },
+        dtype="str",
     )
 
 
