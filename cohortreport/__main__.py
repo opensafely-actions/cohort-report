@@ -30,7 +30,7 @@ def run_action(input_files: List, config: Dict) -> None:
 
 def parse_args(args):
     parser = argparse.ArgumentParser(
-        description="Cohort Report outputs graphs of variables in a study input file"
+        description="Generate a report for each variable in an input file"
     )
     parser.add_argument(
         "--config", type=json.loads, help="A JSON string that contains configuration"

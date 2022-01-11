@@ -1,8 +1,8 @@
-# Cohort Report
+# Cohort-report
 
 ## Summary
 
-Cohort Report outputs graphs of variables in a study input file.
+Cohort-report generates a report for each variable in an input file.
 
 ![Example output from Cohort Report](https://user-images.githubusercontent.com/477263/140117942-fbfde3fc-2ffc-41f9-b2d2-4128629cbb58.png)
 
@@ -50,12 +50,12 @@ Cells in the underlying frequency table have been redacted, if:
 
 Notice the `run` and `config` properties.
 
-The `run` property passes a specific input file to a specific version of cohortreport.
-In this case, the specific input file is *output/input.csv* and the specific version of cohortreport is v1.0.0.
-The `config` property passes configuration to cohortreport; for more information, see *Configuration*.
+The `run` property passes an input file to a named version of cohort-report.
+In this case, it passes *output/input.csv* to v2.1.0 of cohort-report.
+The `config` property passes configuration to cohort-report; for more information, see *Configuration*.
 
-Notice that the HTML document is called `descriptives_[the name of the specific input file, without the extension].html`.
-It is saved to the `output_path` (see below).
+Notice that the report is called `descriptives_[the name of the input file, without the extension].html`.
+It is saved to the `output_path`; for more information, see *Configuration*.
 
 ### Configuration
 
@@ -65,9 +65,32 @@ If the given path does not exist, then it is created.
 
 ---
 
-`variable_types` - this is an optional argument that should be used if the input files contain data without a type, for example, a CSV.
-`cohortreport` can take in other files such as '.feather' and '.dta' which contain the type of the data in each column.
-In these cases, a `variable_types` config if not needed.
+`variable_types`, which is required for `.csv` and `.csv.gz` input files.
+Cast the given variables to the given types.
+Supported types:
+
+* `binary`
+* `categorical`
+* `date`
+* `float`
+* `int`
+
+## Multiple input files
+
+The `run` property can pass multiple input files to a named version of cohort-report.
+For example:
+
+```yaml
+actions:
+  # ...
+  generate_report:
+    run: cohort-report:v2.1.0 output/input_2021-01-01.csv output/input_2021-02-01.csv
+    # ...
+```
+
+However, if one or more input files are `.csv` or `.csv.gz` input files, then `variable_types` is required;
+this will cast the given variables to the given types in all input files.
+It will fail if an input file does not have the given variables.
 
 ## Developer docs
 
