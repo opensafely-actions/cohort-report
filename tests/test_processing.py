@@ -69,7 +69,7 @@ class TestCheckColumnsMatch:
 
 
 @pytest.fixture
-def test_df():
+def input_dataframe():
     return pd.DataFrame(
         {
             "patient_id": [1, 2],
@@ -86,7 +86,7 @@ def test_df():
 
 
 class TestTypeVariables:
-    def test_type_variable_match(self, test_df):
+    def test_type_variable_match(self, input_dataframe):
         variable_dict = {
             "test_binary": "binary",
             "test_categorical": "categorical",
@@ -95,7 +95,7 @@ class TestTypeVariables:
             "test_float": "float",
         }
         observed_df = processing.type_variables_in_df(
-            df=test_df, variables=variable_dict
+            df=input_dataframe, variables=variable_dict
         )
 
         assert observed_df["test_binary"].dtype == "int64"
