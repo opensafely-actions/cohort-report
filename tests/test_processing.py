@@ -68,23 +68,24 @@ class TestCheckColumnsMatch:
         testing.assert_frame_equal(observed_df, test_df)
 
 
-class TestTypeVariables:
-    @pytest.fixture
-    def test_df(self):
-        return pd.DataFrame(
-            {
-                "patient_id": [1, 2],
-                "test_binary": [1, 0],
-                "test_categorical": ["male", "female"],
-                "test_int": [56, 65],
-                "test_date": [
-                    datetime.datetime(2021, 8, 31, 9, 50, 29, 628483),
-                    datetime.datetime(2021, 8, 31, 9, 51, 15, 801522),
-                ],
-                "test_float": [1.2, 5.4],
-            }
-        )
+@pytest.fixture
+def test_df():
+    return pd.DataFrame(
+        {
+            "patient_id": [1, 2],
+            "test_binary": [1, 0],
+            "test_categorical": ["male", "female"],
+            "test_int": [56, 65],
+            "test_date": [
+                datetime.datetime(2021, 8, 31, 9, 50, 29, 628483),
+                datetime.datetime(2021, 8, 31, 9, 51, 15, 801522),
+            ],
+            "test_float": [1.2, 5.4],
+        }
+    )
 
+
+class TestTypeVariables:
     def test_type_variable_match(self, test_df):
         variable_dict = {
             "test_binary": "binary",
