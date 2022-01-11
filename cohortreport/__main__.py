@@ -1,31 +1,11 @@
-""" Command line tool for using cohort reporter """
 import argparse
 import json
+import pathlib
 import sys
-from pathlib import Path
-from typing import Dict, List
 
 from cohortreport import __version__
 from cohortreport.report import make_report
 from cohortreport.utils import load_config
-
-
-def run_action(input_files: List, config: Dict) -> None:
-    """
-    Takes each input file in turn and creates the HTML graphs for each
-    variable as per the configuration.
-
-    Args:
-        input_files: The input files from which the graphs are created.
-        config: The configuration as a JSON object or str
-    """
-
-    for input_file in input_files:
-        make_report(
-            path=Path(input_file),
-            output_dir=config["output_path"],
-            variable_types=config["variable_types"],
-        )
 
 
 def parse_args(args):
@@ -47,8 +27,12 @@ def main():
 
     processed_config = load_config(args.config if args.config is not None else {})
 
-    # run cohort report
-    run_action(input_files=args.input_files, config=processed_config)
+    for input_file in args.input_files:
+        make_report(
+            path=pathlib.Path(input_file),
+            output_dir=processed_config["output_path"],
+            variable_types=processed_config["variable_types"],
+        )
 
 
 if __name__ == "__main__":
