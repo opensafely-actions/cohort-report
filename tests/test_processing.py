@@ -76,10 +76,7 @@ def input_dataframe():
             "test_binary": [1, 0],
             "test_categorical": ["male", "female"],
             "test_int": [56, 65],
-            "test_date": [
-                datetime.datetime(2021, 8, 31, 9, 50, 29, 628483),
-                datetime.datetime(2021, 8, 31, 9, 51, 15, 801522),
-            ],
+            "test_date": [datetime.date(2021, 8, 31), datetime.date(2021, 8, 31)],
             "test_float": [1.2, 5.4],
         }
     )
