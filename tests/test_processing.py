@@ -108,7 +108,7 @@ class TestTypeVariables:
             "date_col": "date",
             "float_col": "float",
         }
-        with pytest.raises(AssertionError):
+        with pytest.raises(ValueError):
             processing.type_variables_in_df(input_dataframe, variable_types)
 
     def test_external_types_do_not_map_to_internal_types_and_are_valid_internal_types(

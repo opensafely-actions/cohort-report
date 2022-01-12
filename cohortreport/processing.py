@@ -92,16 +92,15 @@ def type_variables_in_df(df: pd.DataFrame, variables: Dict) -> pd.DataFrame:
     Returns:
         pd.Dataframe: Dataframes with types applied
     """
-    # Check columns in variable dict match columns
-    checked_df = check_columns_match(df=df, variables=variables)
-
     try:
         dtypes = {v_name: TYPE_MAPPING[v_type] for v_name, v_type in variables.items()}
     except KeyError as e:
         raise ValueError("Invalid variable type") from e
 
-    typed_df = checked_df.astype(dtypes)
-    return typed_df
+    try:
+        return df.astype(dtypes)
+    except KeyError as e:
+        raise ValueError("Invalid variable name") from e
 
 
 def change_binary_to_categorical(series: pd.Series) -> pd.Series:
