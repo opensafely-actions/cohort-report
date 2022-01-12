@@ -62,22 +62,6 @@ def load_study_cohort(path: Path) -> pd.DataFrame:
     return df
 
 
-def check_columns_match(df: pd.DataFrame, variables: Dict) -> pd.DataFrame:
-    """
-    Checks the variable config contains all the columns within
-    the dataframe passed in
-
-    Args:
-        df: Dataframe being checked.
-        variables: Config of the columns
-
-    Returns: Dataframe depending if df columns match the variable dict
-    """
-    if set(df.columns.drop("patient_id")) != set(variables.keys()):
-        raise AssertionError("Columns do not match config")
-    return df
-
-
 def type_variables_in_df(df: pd.DataFrame, variables: Dict) -> pd.DataFrame:
     """
     Takes in a dataframe which has been loaded from either a csv or a csv.gz and

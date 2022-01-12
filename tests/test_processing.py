@@ -48,26 +48,6 @@ class TestLoadStudyCohort:
             processing.load_study_cohort(Path("input.xlsx"))  # No chance!
 
 
-class TestCheckColumnsMatch:
-    @pytest.fixture
-    def test_df(self):
-        return pd.DataFrame(
-            {"patient_id": [1, 2], "copd": [1, 0], "sex": ["male", "female"]}
-        )
-
-    def test_columns_no_match(self, test_df):
-        with pytest.raises(AssertionError):
-            processing.check_columns_match(
-                test_df, {"not_copd": "float64", "sex": "categorical"}
-            )
-
-    def test_columns_match(self, test_df):
-        observed_df = processing.check_columns_match(
-            test_df, {"copd": "float64", "sex": "categorical"}
-        )
-        testing.assert_frame_equal(observed_df, test_df)
-
-
 @pytest.fixture
 def input_dataframe():
     return pd.DataFrame(
