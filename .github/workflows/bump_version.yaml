@@ -1,0 +1,52 @@
+name: Bump version
+on:
+  workflow_run:
+    workflows:
+      - "CI"
+    branches:
+      - "main"
+    types:
+      - "completed"
+
+jobs:
+  # We use github-tag-action to determine the new version, but not to tag the
+  # "trigger" commit (i.e. the commit that triggered this workflow). This is
+  # because we first use the new version to bump instances of the old version;
+  # we then commit these changes and tag this (new) commit.  Consequently, the
+  # trigger commit isn't the tagged commit; the trigger commit is one commit
+  # behind the tagged commit.
+  determine-new-version:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    outputs:
+      new_version: ${{ steps.tag.outputs.new_version }}
+      new_tag: ${{ steps.tag.outputs.new_tag }}
+      previous_version: ${{ steps.tag.outputs.previous_version }}
+      commit_message: "Bump version: ${{ steps.tag.outputs.previous_version }} → ${{ steps.tag.outputs.new_version }}"
+    steps:
+      - uses: actions/checkout@v2
+      - name: Determine new version
+        id: tag
+        uses: mathieudutour/github-tag-action@d745f2e74aaf1ee82e747b181f7a0967978abee0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: false # There doesn't have to be a new version
+          dry_run: true # Don't tag the trigger commit
+  bump-version:
+    runs-on: ubuntu-latest
+    needs: determine-new-version
+    if: needs.determine-new-version.outputs.new_version # There doesn't have to be a new version
+    steps:
+      - uses: actions/checkout@v2
+      - name: Bump instances of old version to new version
+        run: |
+          echo ${{ needs.determine-new-version.outputs.new_version }} > cohortreport/VERSION
+          sed -i -E 's/[0-9]+?\.[0-9]+?\.[0-9]+?/${{ needs.determine-new-version.outputs.new_version }}/g' README.md
+      - name: Commit and tag
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m '${{ needs.determine-new-version.outputs.commit_message }}'
+          git tag --annotate -m '${{ needs.determine-new-version.outputs.commit_message }}' ${{ needs.determine-new-version.outputs.new_tag }}
+          git push --follow-tags --atomic
