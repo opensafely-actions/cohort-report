@@ -84,7 +84,8 @@ def input_dataframe():
 
 
 class TestTypeVariables:
-    def test_type_variable_match(self, input_dataframe):
+    def test_type_variables(self, input_dataframe):
+        # The happy path
         variable_types = {
             "test_binary": "binary",
             "test_categorical": "categorical",
