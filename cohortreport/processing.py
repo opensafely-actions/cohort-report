@@ -17,6 +17,16 @@ from pandas.api.types import (
 from cohortreport.errors import ImportActionError
 
 
+# Maps from external, user-facing types to internal, Pandas types.
+TYPE_MAPPING = {
+    "binary": "int64",
+    "categorical": "category",
+    "date": "category",
+    "float": "float64",
+    "int": "int64",
+}
+
+
 def load_study_cohort(path: Path) -> pd.DataFrame:
     """
     Loads the study cohort (from study_definition.py being run),
@@ -85,20 +95,12 @@ def type_variables_in_df(df: pd.DataFrame, variables: Dict) -> pd.DataFrame:
     # Check columns in variable dict match columns
     checked_df = check_columns_match(df=df, variables=variables)
 
-    # Type columns
-    for column_name, column_type in variables.items():
-        if column_type == "int":
-            variables[column_name] = "int64"
-        elif column_type == "float":
-            variables[column_name] = "float64"
-        elif column_type == "categorical":
-            variables[column_name] = "category"
-        elif column_type == "date":
-            variables[column_name] = "category"
-        elif column_type == "binary":
-            variables[column_name] = "int64"
+    try:
+        dtypes = {v_name: TYPE_MAPPING[v_type] for v_name, v_type in variables.items()}
+    except KeyError as e:
+        raise ValueError("Invalid variable type") from e
 
-    typed_df = checked_df.astype(variables)
+    typed_df = checked_df.astype(dtypes)
     return typed_df
 
 

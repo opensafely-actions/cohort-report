@@ -121,12 +121,8 @@ class TestTypeVariables:
             "test_date": "string",
             "test_float": "string",
         }
-        typed_df = processing.type_variables_in_df(input_dataframe, variable_types)
-        assert typed_df["test_binary"].dtype == "string"
-        assert typed_df["test_categorical"].dtype == "string"
-        assert typed_df["test_int"].dtype == "string"
-        assert typed_df["test_date"].dtype == "string"
-        assert typed_df["test_float"].dtype == "string"
+        with pytest.raises(ValueError):
+            processing.type_variables_in_df(input_dataframe, variable_types)
 
     def test_external_types_do_not_map_to_internal_types_and_are_invalid_internal_types(
         self, input_dataframe
@@ -138,7 +134,7 @@ class TestTypeVariables:
             "test_date": "badgers",
             "test_float": "badgers",
         }
-        with pytest.raises(TypeError):
+        with pytest.raises(ValueError):
             processing.type_variables_in_df(input_dataframe, variable_types)
 
     def test_incorrect_external_types_for_column_values(self, input_dataframe):
