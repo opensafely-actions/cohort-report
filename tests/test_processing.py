@@ -100,6 +100,60 @@ class TestTypeVariables:
         assert typed_df["test_date"].dtype == "category"
         assert typed_df["test_float"].dtype == "float64"
 
+    def test_variable_names_do_not_match_column_names(self, input_dataframe):
+        variable_types = {
+            "binary_col": "binary",
+            "categorical_col": "categorical",
+            "int_col": "int",
+            "date_col": "date",
+            "float_col": "float",
+        }
+        with pytest.raises(AssertionError):
+            processing.type_variables_in_df(input_dataframe, variable_types)
+
+    def test_external_types_do_not_map_to_internal_types_and_are_valid_internal_types(
+        self, input_dataframe
+    ):
+        variable_types = {
+            "test_binary": "string",
+            "test_categorical": "string",
+            "test_int": "string",
+            "test_date": "string",
+            "test_float": "string",
+        }
+        typed_df = processing.type_variables_in_df(input_dataframe, variable_types)
+        assert typed_df["test_binary"].dtype == "string"
+        assert typed_df["test_categorical"].dtype == "string"
+        assert typed_df["test_int"].dtype == "string"
+        assert typed_df["test_date"].dtype == "string"
+        assert typed_df["test_float"].dtype == "string"
+
+    def test_external_types_do_not_map_to_internal_types_and_are_invalid_internal_types(
+        self, input_dataframe
+    ):
+        variable_types = {
+            "test_binary": "badgers",
+            "test_categorical": "badgers",
+            "test_int": "badgers",
+            "test_date": "badgers",
+            "test_float": "badgers",
+        }
+        with pytest.raises(TypeError):
+            processing.type_variables_in_df(input_dataframe, variable_types)
+
+    def test_incorrect_external_types_for_column_values(self, input_dataframe):
+        # Column values cannot be coerced to the internal type that is mapped to the
+        # external type
+        variable_types = {
+            "test_binary": "binary",
+            "test_categorical": "int",  # Incorrect external type
+            "test_int": "int",
+            "test_date": "int",  # Incorrect external type
+            "test_float": "float",
+        }
+        with pytest.raises(ValueError):
+            processing.type_variables_in_df(input_dataframe, variable_types)
+
 
 class TestIsDiscrete:
     def test_with_discrete(self):
