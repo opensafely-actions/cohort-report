@@ -73,7 +73,7 @@ class TestTypeVariables:
             "test_date": "date",
             "test_float": "float",
         }
-        typed_df = processing.type_variables_in_df(input_dataframe, variable_types)
+        typed_df = processing.coerce_columns(input_dataframe, variable_types)
         assert typed_df["test_binary"].dtype == "int64"
         assert typed_df["test_categorical"].dtype == "category"
         assert typed_df["test_int"].dtype == "int64"
@@ -89,7 +89,7 @@ class TestTypeVariables:
             "float_col": "float",
         }
         with pytest.raises(ValueError):
-            processing.type_variables_in_df(input_dataframe, variable_types)
+            processing.coerce_columns(input_dataframe, variable_types)
 
     def test_external_types_do_not_map_to_internal_types_and_are_valid_internal_types(
         self, input_dataframe
@@ -102,7 +102,7 @@ class TestTypeVariables:
             "test_float": "string",
         }
         with pytest.raises(ValueError):
-            processing.type_variables_in_df(input_dataframe, variable_types)
+            processing.coerce_columns(input_dataframe, variable_types)
 
     def test_external_types_do_not_map_to_internal_types_and_are_invalid_internal_types(
         self, input_dataframe
@@ -115,7 +115,7 @@ class TestTypeVariables:
             "test_float": "badgers",
         }
         with pytest.raises(ValueError):
-            processing.type_variables_in_df(input_dataframe, variable_types)
+            processing.coerce_columns(input_dataframe, variable_types)
 
     def test_incorrect_external_types_for_column_values(self, input_dataframe):
         # Column values cannot be coerced to the internal type that is mapped to the
@@ -128,7 +128,7 @@ class TestTypeVariables:
             "test_float": "float",
         }
         with pytest.raises(ValueError):
-            processing.type_variables_in_df(input_dataframe, variable_types)
+            processing.coerce_columns(input_dataframe, variable_types)
 
 
 class TestIsDiscrete:

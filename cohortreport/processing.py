@@ -62,10 +62,10 @@ def load_study_cohort(path: Path) -> pd.DataFrame:
     return df
 
 
-def type_variables_in_df(df: pd.DataFrame, variables: Dict) -> pd.DataFrame:
+def coerce_columns(input_dataframe: pd.DataFrame, variable_types: Dict) -> pd.DataFrame:
     """Coerces the columns in the given data frame to the given types.
 
-    `variables` maps from column names to the types in the list below:
+    `variable_types` maps from column names to the types in the list below:
 
     * `binary`
     * `categorical`
@@ -78,12 +78,14 @@ def type_variables_in_df(df: pd.DataFrame, variables: Dict) -> pd.DataFrame:
             A variable's name was invalid (i.e. not a column in the given data frame).
     """
     try:
-        dtypes = {v_name: TYPE_MAPPING[v_type] for v_name, v_type in variables.items()}
+        dtypes = {
+            v_name: TYPE_MAPPING[v_type] for v_name, v_type in variable_types.items()
+        }
     except KeyError as e:
         raise ValueError("Invalid variable type") from e
 
     try:
-        return df.astype(dtypes)
+        return input_dataframe.astype(dtypes)
     except KeyError as e:
         raise ValueError("Invalid variable name") from e
 

@@ -8,13 +8,13 @@ from jinja2 import Template
 from cohortreport.errors import ConfigAndFileMismatchError
 from cohortreport.processing import (
     change_binary_to_categorical,
+    coerce_columns,
     group,
     load_study_cohort,
     plot,
     redact,
     save,
     summarize,
-    type_variables_in_df,
 )
 
 
@@ -43,7 +43,7 @@ def make_report(
 
     # do type conversion if csv files by using variable type config passed in
     if variable_types is not None:
-        df = type_variables_in_df(df=df, variables=variable_types)
+        df = coerce_columns(df, variable_types)
 
     template_str = pkg_resources.resource_string(
         "cohortreport", "resources/report_template.html"
