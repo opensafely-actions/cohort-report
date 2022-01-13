@@ -63,18 +63,19 @@ def load_study_cohort(path: Path) -> pd.DataFrame:
 
 
 def type_variables_in_df(df: pd.DataFrame, variables: Dict) -> pd.DataFrame:
-    """
-    Takes in a dataframe which has been loaded from either a csv or a csv.gz and
-    therefore does not have type information. It takes in a variable dict which
-    comes from the project.yaml and is passed in as a config json object.
-    It then assigns various types to the df columns.
+    """Coerces the columns in the given data frame to the given types.
 
-    Args:
-        df: data to be changed and typed
-        variables: config that maps variable name (i.e. column name) to type
+    `variables` maps from column names to the types in the list below:
 
-    Returns:
-        pd.Dataframe: Dataframes with types applied
+    * `binary`
+    * `categorical`
+    * `date`
+    * `float`
+    * `int`
+
+    Raises:
+        ValueError: A variable's type was invalid (i.e. not in the list above).
+            A variable's name was invalid (i.e. not a column in the given data frame).
     """
     try:
         dtypes = {v_name: TYPE_MAPPING[v_type] for v_name, v_type in variables.items()}
