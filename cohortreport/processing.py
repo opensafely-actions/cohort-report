@@ -17,6 +17,16 @@ from pandas.api.types import (
 from cohortreport.errors import ImportActionError
 
 
+# Maps from external, user-facing types to internal, Pandas types.
+TYPE_MAPPING = {
+    "binary": "int64",
+    "categorical": "category",
+    "date": "category",
+    "float": "float64",
+    "int": "int64",
+}
+
+
 def load_study_cohort(path: Path) -> pd.DataFrame:
     """
     Loads the study cohort (from study_definition.py being run),
@@ -52,54 +62,32 @@ def load_study_cohort(path: Path) -> pd.DataFrame:
     return df
 
 
-def check_columns_match(df: pd.DataFrame, variables: Dict) -> pd.DataFrame:
+def coerce_columns(input_dataframe: pd.DataFrame, variable_types: Dict) -> pd.DataFrame:
+    """Coerces the columns in the given data frame to the given types.
+
+    `variable_types` maps from column names to the types in the list below:
+
+    * `binary`
+    * `categorical`
+    * `date`
+    * `float`
+    * `int`
+
+    Raises:
+        ValueError: A variable's type was invalid (i.e. not in the list above).
+            A variable's name was invalid (i.e. not a column in the given data frame).
     """
-    Checks the variable config contains all the columns within
-    the dataframe passed in
+    try:
+        dtypes = {
+            v_name: TYPE_MAPPING[v_type] for v_name, v_type in variable_types.items()
+        }
+    except KeyError as e:
+        raise ValueError("Invalid variable type") from e
 
-    Args:
-        df: Dataframe being checked.
-        variables: Config of the columns
-
-    Returns: Dataframe depending if df columns match the variable dict
-    """
-    if set(df.columns.drop("patient_id")) != set(variables.keys()):
-        raise AssertionError("Columns do not match config")
-    return df
-
-
-def type_variables_in_df(df: pd.DataFrame, variables: Dict) -> pd.DataFrame:
-    """
-    Takes in a dataframe which has been loaded from either a csv or a csv.gz and
-    therefore does not have type information. It takes in a variable dict which
-    comes from the project.yaml and is passed in as a config json object.
-    It then assigns various types to the df columns.
-
-    Args:
-        df: data to be changed and typed
-        variables: config that maps variable name (i.e. column name) to type
-
-    Returns:
-        pd.Dataframe: Dataframes with types applied
-    """
-    # Check columns in variable dict match columns
-    checked_df = check_columns_match(df=df, variables=variables)
-
-    # Type columns
-    for column_name, column_type in variables.items():
-        if column_type == "int":
-            variables[column_name] = "int64"
-        elif column_type == "float":
-            variables[column_name] = "float64"
-        elif column_type == "categorical":
-            variables[column_name] = "category"
-        elif column_type == "date":
-            variables[column_name] = "category"
-        elif column_type == "binary":
-            variables[column_name] = "int64"
-
-    typed_df = checked_df.astype(variables)
-    return typed_df
+    try:
+        return input_dataframe.astype(dtypes)
+    except KeyError as e:
+        raise ValueError("Invalid variable name") from e
 
 
 def change_binary_to_categorical(series: pd.Series) -> pd.Series:
