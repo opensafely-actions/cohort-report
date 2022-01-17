@@ -88,7 +88,7 @@ class TestTypeVariables:
             "date_col": "date",
             "float_col": "float",
         }
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="Invalid variable name"):
             processing.coerce_columns(input_dataframe, variable_types)
 
     def test_external_types_do_not_map_to_internal_types_and_are_valid_internal_types(
@@ -101,7 +101,7 @@ class TestTypeVariables:
             "test_date": "string",
             "test_float": "string",
         }
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="Invalid variable type"):
             processing.coerce_columns(input_dataframe, variable_types)
 
     def test_external_types_do_not_map_to_internal_types_and_are_invalid_internal_types(
@@ -114,7 +114,7 @@ class TestTypeVariables:
             "test_date": "badgers",
             "test_float": "badgers",
         }
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="Invalid variable type"):
             processing.coerce_columns(input_dataframe, variable_types)
 
     def test_incorrect_external_types_for_column_values(self, input_dataframe):
