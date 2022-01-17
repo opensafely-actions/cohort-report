@@ -20,7 +20,7 @@ actions:
         cohort: output/input.csv
 
   generate_report:
-    run: cohort-report:v2.1.0 output/input.csv
+    run: cohort-report:v3.0.0 output/input.csv
     needs: [generate_study_population]
     config:
       variable_types:
@@ -51,7 +51,7 @@ Cells in the underlying frequency table have been redacted, if:
 Notice the `run` and `config` properties.
 
 The `run` property passes an input file to a named version of cohort-report.
-In this case, it passes *output/input.csv* to v2.1.0 of cohort-report.
+In this case, it passes *output/input.csv* to v3.0.0 of cohort-report.
 The `config` property passes configuration to cohort-report; for more information, see *Configuration*.
 
 Notice that the report is called `descriptives_[the name of the input file, without the extension].html`.
@@ -82,10 +82,10 @@ For example:
 
 ```yaml
 actions:
-  # ...
+  # 3.0.0.
   generate_report:
-    run: cohort-report:v2.1.0 output/input_2021-01-01.csv output/input_2021-02-01.csv
-    # ...
+    run: cohort-report:v3.0.0 output/input_2021-01-01.csv output/input_2021-02-01.csv
+    # 3.0.0.
 ```
 
 However, if one or more input files are `.csv` or `.csv.gz` input files, then `variable_types` is required;
