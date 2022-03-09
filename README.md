@@ -2,13 +2,15 @@
 
 ## Summary
 
-Cohort-report generates a report for each variable in an input file.
+The reusable action `cohort-report` generates a report including (*i*) summary statistics and (*ii*) plots for each specified variable in an input file.
+The example output below shows an example report for three different variable (`sex`, `bmi`, and `has_copd`).
+Note that the output slightly varies across the different variables because the variable types are different. 
 
 ![Example output from Cohort Report](https://user-images.githubusercontent.com/477263/140117942-fbfde3fc-2ffc-41f9-b2d2-4128629cbb58.png)
 
 ## Usage
 
-Consider the following extract from a study's *project.yaml*:
+Consider the following extract from a study's `project.yaml` 
 
 ```yaml
 actions:
@@ -25,20 +27,13 @@ actions:
     config:
       variable_types:
           age: int
-          sex: categorical
-          ethnicity: categorical
           bmi: float
-          diabetes: binary
-          chronic_liver_disease: binary
-          imd: categorical
-          region: categorical
-          stp: categorical
-          rural_urban: categorical
-          prior_covid_date: date
+          has_copd: binary
       output_path: output/cohort_reports_outputs
     outputs:
       moderately_sensitive:
         reports: output/cohort_reports_outputs/descriptives_input.html
+        reports_charts: output/cohort_reports_outputs/*.png
 ```
 
 The `generate_report` action generates a report that contains a table and a chart for each variable in the input file.
