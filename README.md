@@ -2,7 +2,10 @@
 
 ## Summary
 
-The reusable action `cohort-report` generates a report including (*i*) summary statistics and (*ii*) a chart for each variable in a specified input file.
+The reusable action `cohort-report` generates a report including:
+
+1. summary statistics; and
+2. a chart for each variable in a specified input file.
 The example output below shows an example report for three different variables: `sex`, `bmi`, and `has_copd`.
 
 ![Example output from Cohort Report](https://user-images.githubusercontent.com/477263/140117942-fbfde3fc-2ffc-41f9-b2d2-4128629cbb58.png)
