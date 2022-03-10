@@ -46,25 +46,20 @@ actions:
         reports_charts: output/cohort_reports_outputs/*.png
 ```
  
- ---
 
- The following list describes each "property" of the `cohort-report` action:
+The properties `run`, `needs`, and `outputs` are common to all OpenSAFELY actions, see [the project pipeline](https://docs.opensafely.org/actions-pipelines/) for more information.
+In this case, the `run` property passes *output/input.csv* to v3.0.0 of `cohort-report`.
 
-- **`run`**: Passes an input file to a named version of cohort-report.
-In this case, it passes *output/input.csv* to v3.0.0 of cohort-report.
-- **`needs`**: Specifies a list of actions (contained within square brackets and separated by commas) that are required for it to successfully run.
+The following list describes the `config` properties that are specific to the reusable action `cohort-report`:
+
 - **`config`**: Passes configuration options to `cohort-report`
   - **`variable_types`**: Is required for `.csv` and `.csv.gz` input files to cast the given variables to the given types.
     Supported types are: `binary`, `categorical`, `date`, `float`, and `int`.
   - **`output_path`**: Specify path for all outputs from this action (defaults to `cohort_reports_outputs`).
     If the given path does not exist, then it is created.
-- **`outputs`**: Passes ouput specifications to `cohort-report`
-  - **`reports`**: The report is saved to the `output_path`. 
-    Notice that the report is called `descriptives_[the name of the input file, without the extension].html`. 
-  - **`reports_charts`**: All charts need to be specified here. 
-    The easiest way to add all charts is to use a wildcard ('`*`') in the path: `output/cohort_reports_outputs/*.png`.
 
----
+Notice that the report (`descriptives_[the name of the input file, without the extension].html`) as well as all charts (`[the name of the variable].png`) need to be added as outputs.
+
 
 ## Multiple input files
 
