@@ -20,7 +20,7 @@ Cells in the underlying frequency tables are redacted automatically, if they:
 1. contain less than 10 units; or
 2. contain greater than 90% of the total number of units.
 
-Consider the following extract from a study's `project.yaml`:
+Consider the following extract from a study's *project.yaml*:
 
 ```yaml
 actions:
