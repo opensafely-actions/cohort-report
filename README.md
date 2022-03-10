@@ -15,9 +15,10 @@ The example output below shows an example report for three different variables: 
 The `generate_report` action generates a report that contains a table and a chart for each variable in the input file.
 The table contains unsafe statistics and should be checked thoroughly before it is released.
 The chart contains statistics that have been made safe.
-Cells in the underlying frequency tables are redacted automatically, if they 
-(*i*) contain less than 10 units or
-(*ii*) contain greater than 90% of the total number of units.
+Cells in the underlying frequency tables are redacted automatically, if they:
+
+1. contain less than 10 units; or
+2. contain greater than 90% of the total number of units.
 
 Consider the following extract from a study's `project.yaml`:
 
