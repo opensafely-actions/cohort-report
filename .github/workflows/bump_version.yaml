@@ -8,6 +8,8 @@ on:
     types:
       - "completed"
 
+concurrency: bump-version-group
+
 jobs:
   # We use github-tag-action to determine the new version, but not to tag the
   # "trigger" commit (i.e. the commit that triggered this workflow). This is
